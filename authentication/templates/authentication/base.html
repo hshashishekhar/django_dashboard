@@ -1,0 +1,92 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>{% block title %}Django Auth{% endblock %}</title>
+    
+    <!-- Tailwind CSS -->
+    <link href="https://cdn.jsdelivr.net/npm/tailwindcss@2.2.19/dist/tailwind.min.css" rel="stylesheet">
+    {% block css %}
+    <style>
+        /* Optional: Add this to your CSS file if you need more customization */
+        /* Smooth floating label animation */
+        .peer-placeholder-shown ~ label {
+            top: 50%;
+            transform: translateY(-50%);
+            font-size: 1rem;
+            color: #a0aec0;
+            transition: all 0.3s cubic-bezier(0.68, -0.55, 0.265, 1.55); /* Custom easing */
+        }
+        
+        .peer:focus ~ label,
+        input:not(:placeholder-shown) ~ label {
+            top: -0.75rem;
+            font-size: 0.75rem;
+            color: #667eea;
+            transition: all 0.3s cubic-bezier(0.68, -0.55, 0.265, 1.55); /* Custom easing */
+        }
+    </style>
+    {% endblock %}
+</head>
+<body class="bg-gray-100 font-sans">
+
+    <!-- Navigation Bar -->
+    <nav class="bg-white shadow-md">
+        <div class="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8">
+            <div class="flex justify-between h-16 items-center">
+                <!-- Logo -->
+                <div class="flex-shrink-0 flex items-center">
+                    <a href="/" class="text-xl font-bold text-indigo-600">DASHBOARD</a>
+                </div>
+
+                <!-- Mobile Menu Button -->
+                <button id="menu-btn" class="block sm:hidden focus:outline-none">
+                    <svg xmlns="http://www.w3.org/2000/svg" class="h-6 w-6 text-indigo-600" fill="none" viewBox="0 0 24 24" stroke="currentColor">
+                        <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M4 6h16M4 12h16m-7 6h7"></path>
+                    </svg>
+                </button>
+
+                <!-- Navigation Links (Hidden on Mobile) -->
+                <div id="menu" class="hidden sm:flex sm:items-center space-x-4 transition-all duration-300 ease-in-out">
+                    {% if user.is_authenticated %}
+                        <!-- User is logged in -->
+                        <span class="mr-4 text-gray-500">Hello, {{ user.username }}</span>
+                        <a href="{% url 'logout' %}" class="text-indigo-600 hover:text-indigo-900">Logout</a>
+                    {% else %}
+                        <!-- User is not logged in -->
+                        <a href="{% url 'login' %}" class="text-indigo-600 hover:text-indigo-900">Login</a>
+                        <a href="{% url 'register' %}" class="ml-4 text-indigo-600 hover:text-indigo-900">Register</a>
+                    {% endif %}
+                </div>
+            </div>
+        </div>
+    </nav>
+
+    <!-- Main Content -->
+    <div class="py-12">
+        <div class="max-w-3xl mx-auto bg-white shadow-lg rounded-lg p-6">
+            {% block content %}
+            <!-- Default content goes here -->
+            {% endblock %}
+        </div>
+    </div>
+
+    <!-- JavaScript for Hamburger Menu -->
+    <script>
+        const menuBtn = document.getElementById('menu-btn');
+        const menu = document.getElementById('menu');
+
+        menuBtn.addEventListener('click', () => {
+            menu.classList.toggle('hidden');
+        });
+
+        document.querySelectorAll('#menu a').forEach(link => {
+            link.addEventListener('click', () => {
+                menu.classList.add('hidden');
+            });
+        });
+    </script>
+
+</body>
+</html>
