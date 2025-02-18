@@ -1,3 +1,4 @@
+{% load static %}
 <!DOCTYPE html>
 <html lang="en">
 <head>
@@ -7,27 +8,8 @@
     
     <!-- Tailwind CSS -->
     <link href="https://cdn.jsdelivr.net/npm/tailwindcss@2.2.19/dist/tailwind.min.css" rel="stylesheet">
-    {% block css %}
-    <style>
-        /* Optional: Add this to your CSS file if you need more customization */
-        /* Smooth floating label animation */
-        .peer-placeholder-shown ~ label {
-            top: 50%;
-            transform: translateY(-50%);
-            font-size: 1rem;
-            color: #a0aec0;
-            transition: all 0.3s cubic-bezier(0.68, -0.55, 0.265, 1.55); /* Custom easing */
-        }
-        
-        .peer:focus ~ label,
-        input:not(:placeholder-shown) ~ label {
-            top: -0.75rem;
-            font-size: 0.75rem;
-            color: #667eea;
-            transition: all 0.3s cubic-bezier(0.68, -0.55, 0.265, 1.55); /* Custom easing */
-        }
-    </style>
-    {% endblock %}
+    <!-- Custom Style -->
+    <link rel="stylesheet" href="{% static 'authentication/css/style.css' %}">
 </head>
 <body class="bg-gray-100 font-sans">
 
@@ -73,20 +55,7 @@
     </div>
 
     <!-- JavaScript for Hamburger Menu -->
-    <script>
-        const menuBtn = document.getElementById('menu-btn');
-        const menu = document.getElementById('menu');
-
-        menuBtn.addEventListener('click', () => {
-            menu.classList.toggle('hidden');
-        });
-
-        document.querySelectorAll('#menu a').forEach(link => {
-            link.addEventListener('click', () => {
-                menu.classList.add('hidden');
-            });
-        });
-    </script>
+    <script src="{% static 'authentication/js/script.js' %}"></script>
 
 </body>
 </html>

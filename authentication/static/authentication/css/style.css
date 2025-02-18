@@ -1,0 +1,17 @@
+/* Optional: Add this to your CSS file if you need more customization */
+/* Smooth floating label animation */
+.peer-placeholder-shown ~ label {
+    top: 50%;
+    transform: translateY(-50%);
+    font-size: 1rem;
+    color: #a0aec0;
+    transition: all 0.3s cubic-bezier(0.68, -0.55, 0.265, 1.55); /* Custom easing */
+}
+
+.peer:focus ~ label,
+input:not(:placeholder-shown) ~ label {
+    top: -0.75rem;
+    font-size: 0.75rem;
+    color: #667eea;
+    transition: all 0.3s cubic-bezier(0.68, -0.55, 0.265, 1.55); /* Custom easing */
+}
