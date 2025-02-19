@@ -7,6 +7,48 @@
     <script src="https://cdn.tailwindcss.com"></script>
     <script src="https://cdn.jsdelivr.net/npm/chart.js"></script>
     <script src="https://unpkg.com/lucide@latest"></script>
+    <style>
+
+/* Responsive adjustments */
+
+@media (max-width: 640px) {
+    /* Adjust font sizes for smaller screens */
+    #notificationDropdown h3 {
+        font-size: 0.875rem; /* Smaller header text */
+    }
+
+    #notificationDropdown p {
+        font-size: 0.75rem; /* Smaller paragraph text */
+    }
+
+    /* Reduce padding and margins */
+    #notificationDropdown .px-4 {
+        padding-left: 1rem;
+        padding-right: 1rem;
+    }
+
+    #notificationDropdown .py-3 {
+        padding-top: 0.75rem;
+        padding-bottom: 0.75rem;
+    }
+
+
+    /* Ensure dropdown is visible on small screens */
+    #notificationDropdown {
+        width: max-content;
+        position: absolute;
+        top: 100%; /* Position below the button */
+        left: 0; /* Align to the left edge of the parent */
+        right: 0; /* Stretch to the full width */
+        margin-top: 0.5rem; /* Add spacing between button and dropdown */
+        padding: 0.5rem; /* Add padding to prevent content from touching edges */
+        background-color: white; /* Ensure background is visible */
+        border: 1px solid #e5e7eb; /* Add a border for better visibility */
+        border-radius: 0.5rem; /* Rounded corners */
+    }
+
+}
+    </style>
 </head>
 <body>
     <div class="flex h-screen bg-gray-100">
