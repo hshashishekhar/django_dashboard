@@ -46,39 +46,122 @@
         border: 1px solid #e5e7eb; /* Add a border for better visibility */
         border-radius: 0.5rem; /* Rounded corners */
     }
+}
+/* Base styles for the sidebar */
+#sidebar {
+    width: 64px; /* Fixed width for collapsed state */
+    background-color: black;
+    flex-direction: column;
+    align-items: center;
+    padding-top: 1.5rem; /* Add vertical padding */
+    gap: 2rem; /* Space between items */
+    transition: width 0.3s ease-in-out; /* Smooth width transition */
+    position: fixed; /* Fix the sidebar in place */
+    top: 0; /* Stick to the top */
+    left: 0; /* Stick to the left */
+    height: 100vh; /* Full height */
+    z-index: 50; /* Ensure it appears above other elements */
+    overflow: hidden; /* Prevent content from overflowing */
+}
 
+/* Expanded state on hover */
+#sidebar:hover {
+    width: 192px; /* Fixed width for expanded state */
+}
+
+/* Icon container */
+#sidebar .text-white {
+    display: flex;
+    justify-content: center;
+    align-items: center;
+    width: 100%;
+}
+
+/* Navigation buttons */
+#sidebar nav button {
+    display: flex;
+    align-items: center;
+    justify-content: flex-start;
+    width: 100%;
+    padding: 0.75rem; /* Ensure proper padding */
+    color: gray; /* Default icon color */
+    transition: color 0.3s ease-in-out; /* Smooth color transition */
+}
+
+/* Icons */
+#sidebar nav button i {
+    width: 1.25rem; /* Fixed size for icons */
+    height: 1.25rem;
+    transition: transform 0.3s ease-in-out; /* Optional: Add subtle animation */
+}
+
+/* Text labels */
+#sidebar nav button span {
+    margin-left: 0.75rem; /* Spacing between icon and text */
+    font-size: 0.875rem; /* Smaller font size */
+    opacity: 0; /* Hidden by default */
+    transition: opacity 0.3s ease-in-out; /* Smooth fade-in effect */
+    white-space: nowrap; /* Prevent text wrapping */
+}
+
+/* Hover effects */
+#sidebar:hover nav button span {
+    opacity: 1; /* Show text on hover */
+}
+
+#sidebar nav button:hover {
+    color: white; /* Change icon color on hover */
+}
+
+/* Main content styling */
+.main-content {
+    margin-left: 64px; /*Match the collapsed width of the sidebar
+    padding: 1rem; /* Add padding for spacing */
+    transition: none; /* No transition for content */
+    position: relative; /* Ensure content stays in place */
+    z-index: 10; /* Ensure content stays below the sidebar */
 }
     </style>
 </head>
 <body>
     <div class="flex h-screen bg-gray-100">
         <!-- Sidebar -->
-        <div id="sidebar" class="w-16 bg-black flex flex-col items-center py-6 space-y-8 lg:w-20">
+        <div id="sidebar" class="w-16 bg-black flex flex-col items-center py-6 space-y-8 lg:w-20 hover:w-48 transition-all duration-300 group">
+            <!-- Logo or Icon -->
             <div class="text-white">
                 <i data-lucide="layout-grid" class="w-6 h-6"></i>
             </div>
+            <!-- Navigation Buttons -->
             <nav class="flex flex-col space-y-6">
-                <button class="p-2 text-gray-400 hover:text-white transition-colors">
+                <!-- Refresh Button -->
+                <button class="p-2 text-gray-400 hover:text-white transition-colors flex items-center">
                     <i data-lucide="refresh-cw" class="w-5 h-5"></i>
+                    <span class="ml-2 text-sm opacity-0 group-hover:opacity-100 transition-opacity duration-300">Refresh</span>
                 </button>
-                <button class="p-2 text-gray-400 hover:text-white transition-colors">
+                <!-- Wallet Button -->
+                <button class="p-2 text-gray-400 hover:text-white transition-colors flex items-center">
                     <i data-lucide="wallet" class="w-5 h-5"></i>
+                    <span class="ml-2 text-sm opacity-0 group-hover:opacity-100 transition-opacity duration-300">Wallet</span>
                 </button>
-                <button class="p-2 text-gray-400 hover:text-white transition-colors">
+                <!-- File Text Button -->
+                <button class="p-2 text-gray-400 hover:text-white transition-colors flex items-center">
                     <i data-lucide="file-text" class="w-5 h-5"></i>
+                    <span class="ml-2 text-sm opacity-0 group-hover:opacity-100 transition-opacity duration-300">Documents</span>
                 </button>
-                <button class="p-2 text-gray-400 hover:text-white transition-colors">
+                <!-- Settings Button -->
+                <button class="p-2 text-gray-400 hover:text-white transition-colors flex items-center">
                     <i data-lucide="settings" class="w-5 h-5"></i>
+                    <span class="ml-2 text-sm opacity-0 group-hover:opacity-100 transition-opacity duration-300">Settings</span>
                 </button>
             </nav>
         </div>
 
         <!-- Main Content -->
-        <div class="flex-1 overflow-auto">
+        <div class="flex-1 overflow-auto main-content">
             <!-- Header -->
             <header class="bg-white p-4 flex flex-col md:flex-row items-center justify-between border-b">
                 <div class="flex items-center space-x-4 mb-4 md:mb-0">
-                    <i id="menuButton" data-lucide="menu" class="w-6 h-6 cursor-pointer"></i>
+                    <!-- <i id="menuButton" data-lucide="menu" class="w-6 h-6 cursor-pointer"></i> -->
                     <h1 class="text-xl font-semibold">Dashboard</h1>
                 </div>
                 <div class="flex items-center space-x-4">
@@ -375,21 +458,14 @@
         // Initialize Lucide icons
         lucide.createIcons();
         
-        // Toggle Sidebar Functionality
-        const menuButton = document.getElementById('menuButton');
-        const sidebar = document.getElementById('sidebar');
+        // // Toggle Sidebar Functionality
+        // const menuButton = document.getElementById('menuButton');
+        // const sidebar = document.getElementById('sidebar');
 
-        menuButton.addEventListener('click', () => {
-            sidebar.classList.toggle('hidden');
-        });
+        // menuButton.addEventListener('click', () => {
+        //     sidebar.classList.toggle('hidden');
+        // });
 
-        // Check for saved user preference on page load
-        const savedTheme = localStorage.getItem('theme');
-        if (savedTheme === 'dark') {
-        document.documentElement.classList.add('dark');
-        } else {
-        document.documentElement.classList.remove('dark');
-        }
 
         // Chart data for different time periods
         const chartData = {
@@ -443,14 +519,14 @@
                         {
                             label: 'Income',
                             data: chartData.revenue.monthly.income,
-                            borderColor: '#000000',
+                            borderColor: '#B6A6E9',
                             tension: 0.4,
                             fill: false
                         },
                         {
                             label: 'Expenses',
                             data: chartData.revenue.monthly.expenses,
-                            borderColor: '#848785',
+                            borderColor: '#000000',
                             tension: 0.4,
                             fill: false
                         }
@@ -493,7 +569,7 @@
                         {
                             label: 'Deliveries',
                             data: chartData.orders.weekly.deliveries,
-                            backgroundColor: '#848785',
+                            backgroundColor: '#B6A6E9',
                             barThickness: 20,
                             borderRadius: 4
                         }
