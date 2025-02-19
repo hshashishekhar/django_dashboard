@@ -89,10 +89,30 @@
                             </div>
                         </div>
                     </div>
-                    <div class="flex items-center space-x-2">
-                        <span class="text-sm">Ollama Studio</span>
-                        <div class="w-8 h-8 bg-orange-500 rounded-full flex items-center justify-center text-white">
-                            O
+                    <div class="relative inline-block">
+                        <!-- Profile Button -->
+                        <button id="profileButton" class="flex items-center space-x-2 hover:opacity-80">
+                            <span class="text-sm">Ollama Studio</span>
+                            <div class="w-8 h-8 bg-orange-500 rounded-full flex items-center justify-center text-white">
+                                O
+                            </div>
+                            <i data-lucide="chevron-down" class="w-4 h-4 text-gray-500"></i>
+                        </button>
+
+                        <!-- Profile Dropdown Menu -->
+                        <div id="profileDropdown" class="hidden absolute right-0 mt-2 w-48 bg-white rounded-lg shadow-lg border border-gray-200 z-50">
+                            <a href="#" class="flex items-center px-4 py-2 text-sm text-gray-700 hover:bg-gray-100 border-b border-gray-200">
+                                <i data-lucide="user" class="w-4 h-4 mr-2"></i>
+                                Profile
+                            </a>
+                            <a href="#" class="flex items-center px-4 py-2 text-sm text-gray-700 hover:bg-gray-100 border-b border-gray-200">
+                                <i data-lucide="settings" class="w-4 h-4 mr-2"></i>
+                                Settings
+                            </a>
+                            <a href="#" class="flex items-center px-4 py-2 text-sm text-red-600 hover:bg-gray-100">
+                                <i data-lucide="log-out" class="w-4 h-4 mr-2"></i>
+                                Logout
+                            </a>
                         </div>
                     </div>
                 </div>
@@ -515,6 +535,21 @@
         document.addEventListener('click', (e) => {
             if (!notificationButton.contains(e.target)) {
                 notificationDropdown.classList.add('hidden');
+            }
+        });
+
+        // Profile dropdown functionality
+        const profileButton = document.getElementById('profileButton');
+        const profileDropdown = document.getElementById('profileDropdown');
+        
+        profileButton.addEventListener('click', (e) => {
+            e.stopPropagation();
+            profileDropdown.classList.toggle('hidden');
+        });
+        
+        document.addEventListener('click', (e) => {
+            if (!profileButton.contains(e.target)) {
+                profileDropdown.classList.add('hidden');
             }
         });
     </script>
