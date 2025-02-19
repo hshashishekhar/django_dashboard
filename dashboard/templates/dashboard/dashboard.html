@@ -7,11 +7,6 @@
     <script src="https://cdn.tailwindcss.com"></script>
     <script src="https://cdn.jsdelivr.net/npm/chart.js"></script>
     <script src="https://unpkg.com/lucide@latest"></script>
-    <style>
-        #menuButton {
-            cursor: pointer; /* Changes the cursor to a pointer (hand icon) on hover */
-        }
-    </style>
 </head>
 <body>
     <div class="flex h-screen bg-gray-100">
@@ -41,11 +36,59 @@
             <!-- Header -->
             <header class="bg-white p-4 flex flex-col md:flex-row items-center justify-between border-b">
                 <div class="flex items-center space-x-4 mb-4 md:mb-0">
-                    <i id="menuButton" data-lucide="menu" class="w-6 h-6"></i>
+                    <i id="menuButton" data-lucide="menu" class="w-6 h-6 cursor-pointer"></i>
                     <h1 class="text-xl font-semibold">Dashboard</h1>
                 </div>
                 <div class="flex items-center space-x-4">
-                    <i data-lucide="bell" class="w-5 h-5 text-gray-500 cursor-pointer"></i>
+                    <div class="relative inline-block">
+                        <!-- Bell Icon Button -->
+                        <button id="notificationButton" class="relative">
+                            <i data-lucide="bell" class="w-5 h-5 text-gray-500 hover:text-gray-700 cursor-pointer"></i>
+                            <span id="notification-count" class="absolute -top-2 -right-2 bg-red-500 text-white text-xs rounded-full px-1.5 py-0.5">
+                                2
+                            </span>
+                        </button>
+                        
+                        <!-- Dropdown Menu -->
+                        <div id="notificationDropdown" class="hidden absolute right-0 mt-2 w-80 bg-white rounded-lg shadow-lg border border-gray-200 z-50">
+                            <!-- Dropdown Header -->
+                            <div class="px-4 py-3 border-b border-gray-200">
+                                <h3 class="text-sm font-semibold text-gray-700">Notifications</h3>
+                            </div>
+                            
+                            <!-- Notification Items -->
+                            <div class="max-h-64 overflow-y-auto">
+                                <!-- Notification Item 1 -->
+                                <a href="#" class="flex px-4 py-3 hover:bg-gray-50 border-b border-gray-200">
+                                    <div class="flex-shrink-0">
+                                        <i data-lucide="shopping-cart" class="w-5 h-5 text-blue-500"></i>
+                                    </div>
+                                    <div class="ml-3">
+                                        <p class="text-sm font-medium text-gray-900">New order received</p>
+                                        <p class="text-xs text-gray-500">Order #12345 from John Doe</p>
+                                        <p class="text-xs text-gray-400 mt-1">2 minutes ago</p>
+                                    </div>
+                                </a>
+                                
+                                <!-- Notification Item 2 -->
+                                <a href="#" class="flex px-4 py-3 hover:bg-gray-50">
+                                    <div class="flex-shrink-0">
+                                        <i data-lucide="alert-circle" class="w-5 h-5 text-red-500"></i>
+                                    </div>
+                                    <div class="ml-3">
+                                        <p class="text-sm font-medium text-gray-900">System Alert</p>
+                                        <p class="text-xs text-gray-500">Server load is high</p>
+                                        <p class="text-xs text-gray-400 mt-1">5 minutes ago</p>
+                                    </div>
+                                </a>
+                            </div>
+                            
+                            <!-- Dropdown Footer -->
+                            <div class="px-4 py-2 border-t border-gray-200">
+                                <a href="#" class="text-sm text-blue-600 hover:text-blue-800 font-medium">View all notifications</a>
+                            </div>
+                        </div>
+                    </div>
                     <div class="flex items-center space-x-2">
                         <span class="text-sm">Ollama Studio</span>
                         <div class="w-8 h-8 bg-orange-500 rounded-full flex items-center justify-center text-white">
@@ -457,6 +500,23 @@
 
         // Initialize charts when the page loads
         initializeCharts();
+
+        // Notification dropdown functionality
+        const notificationButton = document.getElementById('notificationButton');
+        const notificationDropdown = document.getElementById('notificationDropdown');
+        
+        // Toggle dropdown on button click
+        notificationButton.addEventListener('click', (e) => {
+            e.stopPropagation();
+            notificationDropdown.classList.toggle('hidden');
+        });
+        
+        // Close dropdown when clicking outside
+        document.addEventListener('click', (e) => {
+            if (!notificationButton.contains(e.target)) {
+                notificationDropdown.classList.add('hidden');
+            }
+        });
     </script>
 </body>
 </html>
