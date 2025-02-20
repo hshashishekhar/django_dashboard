@@ -32,6 +32,15 @@ DEBUG = True
 ALLOWED_HOSTS = []
 
 
+# Email configuration for development
+EMAIL_BACKEND = 'django.core.mail.backends.console.EmailBackend'  # Prints emails to the console
+EMAIL_HOST = 'smtp.example.com'  # Replace with your email provider's SMTP server
+EMAIL_PORT = 587
+EMAIL_USE_TLS = True
+EMAIL_HOST_USER = 'your-email@example.com'  # Replace with your email address
+EMAIL_HOST_PASSWORD = 'your-email-password'  # Replace with your email password
+
+
 # Application definition
 
 INSTALLED_APPS = [
