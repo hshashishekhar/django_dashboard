@@ -8,119 +8,80 @@
     <script src="https://cdn.jsdelivr.net/npm/chart.js"></script>
     <script src="https://unpkg.com/lucide@latest"></script>
     <style>
+        /* Base styles for the sidebar */
+        #sidebar {
+            width: 64px; /* Fixed width for collapsed state */
+            background-color: black;
+            flex-direction: column;
+            align-items: center;
+            padding-top: 1.5rem; /* Add vertical padding */
+            gap: 2rem; /* Space between items */
+            transition: width 0.3s ease-in-out; /* Smooth width transition */
+            position: fixed; /* Fix the sidebar in place */
+            top: 0; /* Stick to the top */
+            left: 0; /* Stick to the left */
+            height: 100vh; /* Full height */
+            z-index: 50; /* Ensure it appears above other elements */
+            overflow: hidden; /* Prevent content from overflowing */
+        }
 
-/* Responsive adjustments */
+        /* Expanded state on hover */
+        #sidebar:hover {
+            width: 192px; /* Fixed width for expanded state */
+        }
 
-@media (max-width: 640px) {
-    /* Adjust font sizes for smaller screens */
-    #notificationDropdown h3 {
-        font-size: 0.875rem; /* Smaller header text */
-    }
+        /* Icon container */
+        #sidebar .text-white {
+            display: flex;
+            justify-content: center;
+            align-items: center;
+            width: 100%;
+        }
 
-    #notificationDropdown p {
-        font-size: 0.75rem; /* Smaller paragraph text */
-    }
+        /* Navigation buttons */
+        #sidebar nav button {
+            display: flex;
+            align-items: center;
+            justify-content: flex-start;
+            width: 100%;
+            padding: 0.75rem; /* Ensure proper padding */
+            color: gray; /* Default icon color */
+            transition: color 0.3s ease-in-out; /* Smooth color transition */
+        }
 
-    /* Reduce padding and margins */
-    #notificationDropdown .px-4 {
-        padding-left: 1rem;
-        padding-right: 1rem;
-    }
+        /* Icons */
+        #sidebar nav button i {
+            width: 1.25rem; /* Fixed size for icons */
+            height: 1.25rem;
+            transition: transform 0.3s ease-in-out; /* Optional: Add subtle animation */
+        }
 
-    #notificationDropdown .py-3 {
-        padding-top: 0.75rem;
-        padding-bottom: 0.75rem;
-    }
+        /* Text labels */
+        #sidebar nav button span {
+            margin-left: 0.75rem; /* Spacing between icon and text */
+            font-size: 0.875rem; /* Smaller font size */
+            opacity: 0; /* Hidden by default */
+            transition: opacity 0.3s ease-in-out; /* Smooth fade-in effect */
+            white-space: nowrap; /* Prevent text wrapping */
+        }
 
+        /* Hover effects */
+        #sidebar:hover nav button span {
+            opacity: 1; /* Show text on hover */
+        }
 
-    /* Ensure dropdown is visible on small screens */
-    #notificationDropdown {
-        width: max-content;
-        position: absolute;
-        top: 100%; /* Position below the button */
-        left: 0; /* Align to the left edge of the parent */
-        right: 0; /* Stretch to the full width */
-        margin-top: 0.5rem; /* Add spacing between button and dropdown */
-        padding: 0.5rem; /* Add padding to prevent content from touching edges */
-        background-color: white; /* Ensure background is visible */
-        border: 1px solid #e5e7eb; /* Add a border for better visibility */
-        border-radius: 0.5rem; /* Rounded corners */
-    }
-}
-/* Base styles for the sidebar */
-#sidebar {
-    width: 64px; /* Fixed width for collapsed state */
-    background-color: black;
-    flex-direction: column;
-    align-items: center;
-    padding-top: 1.5rem; /* Add vertical padding */
-    gap: 2rem; /* Space between items */
-    transition: width 0.3s ease-in-out; /* Smooth width transition */
-    position: fixed; /* Fix the sidebar in place */
-    top: 0; /* Stick to the top */
-    left: 0; /* Stick to the left */
-    height: 100vh; /* Full height */
-    z-index: 50; /* Ensure it appears above other elements */
-    overflow: hidden; /* Prevent content from overflowing */
-}
+        #sidebar nav button:hover {
+            color: white; /* Change icon color on hover */
+        }
 
-/* Expanded state on hover */
-#sidebar:hover {
-    width: 192px; /* Fixed width for expanded state */
-}
-
-/* Icon container */
-#sidebar .text-white {
-    display: flex;
-    justify-content: center;
-    align-items: center;
-    width: 100%;
-}
-
-/* Navigation buttons */
-#sidebar nav button {
-    display: flex;
-    align-items: center;
-    justify-content: flex-start;
-    width: 100%;
-    padding: 0.75rem; /* Ensure proper padding */
-    color: gray; /* Default icon color */
-    transition: color 0.3s ease-in-out; /* Smooth color transition */
-}
-
-/* Icons */
-#sidebar nav button i {
-    width: 1.25rem; /* Fixed size for icons */
-    height: 1.25rem;
-    transition: transform 0.3s ease-in-out; /* Optional: Add subtle animation */
-}
-
-/* Text labels */
-#sidebar nav button span {
-    margin-left: 0.75rem; /* Spacing between icon and text */
-    font-size: 0.875rem; /* Smaller font size */
-    opacity: 0; /* Hidden by default */
-    transition: opacity 0.3s ease-in-out; /* Smooth fade-in effect */
-    white-space: nowrap; /* Prevent text wrapping */
-}
-
-/* Hover effects */
-#sidebar:hover nav button span {
-    opacity: 1; /* Show text on hover */
-}
-
-#sidebar nav button:hover {
-    color: white; /* Change icon color on hover */
-}
-
-/* Main content styling */
-.main-content {
-    margin-left: 64px; /*Match the collapsed width of the sidebar
-    padding: 1rem; /* Add padding for spacing */
-    transition: none; /* No transition for content */
-    position: relative; /* Ensure content stays in place */
-    z-index: 10; /* Ensure content stays below the sidebar */
-}
+        /* Main content styling */
+        .main-content {
+            margin-left: 64px; /*Match the collapsed width of the sidebar
+            padding: 1rem; /* Add padding for spacing */
+            transition: none; /* No transition for content */
+            position: relative; /* Ensure content stays in place */
+            z-index: 10; /* Ensure content stays below the sidebar */
+        }
     </style>
 </head>
 <body>
@@ -165,55 +126,6 @@
                     <h1 class="text-xl font-semibold">Dashboard</h1>
                 </div>
                 <div class="flex items-center space-x-4">
-                    <div class="relative inline-block">
-                        <!-- Bell Icon Button -->
-                        <button id="notificationButton" class="relative">
-                            <i data-lucide="bell" class="w-5 h-5 text-gray-500 hover:text-gray-700 cursor-pointer"></i>
-                            <span id="notification-count" class="absolute -top-2 -right-2 bg-red-500 text-white text-xs rounded-full px-1.5 py-0.5">
-                                2
-                            </span>
-                        </button>
-                        
-                        <!-- Dropdown Menu -->
-                        <div id="notificationDropdown" class="hidden absolute right-0 mt-2 w-80 bg-white rounded-lg shadow-lg border border-gray-200 z-50">
-                            <!-- Dropdown Header -->
-                            <div class="px-4 py-3 border-b border-gray-200">
-                                <h3 class="text-sm font-semibold text-gray-700">Notifications</h3>
-                            </div>
-                            
-                            <!-- Notification Items -->
-                            <div class="max-h-64 overflow-y-auto">
-                                <!-- Notification Item 1 -->
-                                <a href="#" class="flex px-4 py-3 hover:bg-gray-50 border-b border-gray-200">
-                                    <div class="flex-shrink-0">
-                                        <i data-lucide="shopping-cart" class="w-5 h-5 text-blue-500"></i>
-                                    </div>
-                                    <div class="ml-3">
-                                        <p class="text-sm font-medium text-gray-900">New order received</p>
-                                        <p class="text-xs text-gray-500">Order #12345 from John Doe</p>
-                                        <p class="text-xs text-gray-400 mt-1">2 minutes ago</p>
-                                    </div>
-                                </a>
-                                
-                                <!-- Notification Item 2 -->
-                                <a href="#" class="flex px-4 py-3 hover:bg-gray-50">
-                                    <div class="flex-shrink-0">
-                                        <i data-lucide="alert-circle" class="w-5 h-5 text-red-500"></i>
-                                    </div>
-                                    <div class="ml-3">
-                                        <p class="text-sm font-medium text-gray-900">System Alert</p>
-                                        <p class="text-xs text-gray-500">Server load is high</p>
-                                        <p class="text-xs text-gray-400 mt-1">5 minutes ago</p>
-                                    </div>
-                                </a>
-                            </div>
-                            
-                            <!-- Dropdown Footer -->
-                            <div class="px-4 py-2 border-t border-gray-200">
-                                <a href="#" class="text-sm text-blue-600 hover:text-blue-800 font-medium">View all notifications</a>
-                            </div>
-                        </div>
-                    </div>
                     <div class="relative inline-block">
                         <!-- Profile Button -->
                         <button id="profileButton" class="flex items-center space-x-2 hover:opacity-80">
@@ -355,23 +267,6 @@
     <script>
         // Initialize Lucide icons
         lucide.createIcons();
-
-        // Notification dropdown functionality
-        const notificationButton = document.getElementById('notificationButton');
-        const notificationDropdown = document.getElementById('notificationDropdown');
-        
-        // Toggle dropdown on button click
-        notificationButton.addEventListener('click', (e) => {
-            e.stopPropagation();
-            notificationDropdown.classList.toggle('hidden');
-        });
-        
-        // Close dropdown when clicking outside
-        document.addEventListener('click', (e) => {
-            if (!notificationButton.contains(e.target)) {
-                notificationDropdown.classList.add('hidden');
-            }
-        });
 
         // Profile dropdown functionality
         const profileButton = document.getElementById('profileButton');
