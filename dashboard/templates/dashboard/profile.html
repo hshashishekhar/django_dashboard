@@ -1,101 +1,384 @@
-{% extends 'dashboard/base.html' %}
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Dashboard</title>
+    <script src="https://cdn.tailwindcss.com"></script>
+    <script src="https://cdn.jsdelivr.net/npm/chart.js"></script>
+    <script src="https://unpkg.com/lucide@latest"></script>
+    <style>
 
-{% block title %}Profile{% endblock %}
+/* Responsive adjustments */
 
-{% block content %}
-<div class="container mx-auto px-4 py-4 sm:py-8">
-    <div class="max-w-4xl mx-auto">
-        <!-- Profile Header -->
-        <div class="bg-white rounded-lg shadow-md p-4 sm:p-6 mb-4 sm:mb-6">
-            <div class="flex flex-col sm:flex-row items-center sm:space-x-6">
-                <div class="h-20 w-20 sm:h-24 sm:w-24 rounded-full overflow-hidden bg-gray-100 mb-4 sm:mb-0">
-                    <img src="https://images.unsplash.com/photo-1545167622-3a6ac756afa4?ixlib=rb-1.2.1&amp;ixid=eyJhcHBfaWQiOjEyMDd9&amp;auto=format&amp;fit=crop&amp;w=1256&amp;q=80" alt="Profile Picture" class="h-full w-full object-cover">
-                </div>
-                <div class="text-center sm:text-left">
-                    <h1 class="text-xl sm:text-2xl font-bold text-gray-900">{{ user.username }}</h1>
-                    <p class="text-gray-600">{{ user.email }}</p>
-                    <button class="mt-2 px-3 py-1.5 sm:px-4 sm:py-2 bg-indigo-600 text-white text-sm sm:text-base rounded-md hover:bg-indigo-700 transition-colors">
-                        Edit Profile
-                    </button>
-                </div>
+@media (max-width: 640px) {
+    /* Adjust font sizes for smaller screens */
+    #notificationDropdown h3 {
+        font-size: 0.875rem; /* Smaller header text */
+    }
+
+    #notificationDropdown p {
+        font-size: 0.75rem; /* Smaller paragraph text */
+    }
+
+    /* Reduce padding and margins */
+    #notificationDropdown .px-4 {
+        padding-left: 1rem;
+        padding-right: 1rem;
+    }
+
+    #notificationDropdown .py-3 {
+        padding-top: 0.75rem;
+        padding-bottom: 0.75rem;
+    }
+
+
+    /* Ensure dropdown is visible on small screens */
+    #notificationDropdown {
+        width: max-content;
+        position: absolute;
+        top: 100%; /* Position below the button */
+        left: 0; /* Align to the left edge of the parent */
+        right: 0; /* Stretch to the full width */
+        margin-top: 0.5rem; /* Add spacing between button and dropdown */
+        padding: 0.5rem; /* Add padding to prevent content from touching edges */
+        background-color: white; /* Ensure background is visible */
+        border: 1px solid #e5e7eb; /* Add a border for better visibility */
+        border-radius: 0.5rem; /* Rounded corners */
+    }
+}
+/* Base styles for the sidebar */
+#sidebar {
+    width: 64px; /* Fixed width for collapsed state */
+    background-color: black;
+    flex-direction: column;
+    align-items: center;
+    padding-top: 1.5rem; /* Add vertical padding */
+    gap: 2rem; /* Space between items */
+    transition: width 0.3s ease-in-out; /* Smooth width transition */
+    position: fixed; /* Fix the sidebar in place */
+    top: 0; /* Stick to the top */
+    left: 0; /* Stick to the left */
+    height: 100vh; /* Full height */
+    z-index: 50; /* Ensure it appears above other elements */
+    overflow: hidden; /* Prevent content from overflowing */
+}
+
+/* Expanded state on hover */
+#sidebar:hover {
+    width: 192px; /* Fixed width for expanded state */
+}
+
+/* Icon container */
+#sidebar .text-white {
+    display: flex;
+    justify-content: center;
+    align-items: center;
+    width: 100%;
+}
+
+/* Navigation buttons */
+#sidebar nav button {
+    display: flex;
+    align-items: center;
+    justify-content: flex-start;
+    width: 100%;
+    padding: 0.75rem; /* Ensure proper padding */
+    color: gray; /* Default icon color */
+    transition: color 0.3s ease-in-out; /* Smooth color transition */
+}
+
+/* Icons */
+#sidebar nav button i {
+    width: 1.25rem; /* Fixed size for icons */
+    height: 1.25rem;
+    transition: transform 0.3s ease-in-out; /* Optional: Add subtle animation */
+}
+
+/* Text labels */
+#sidebar nav button span {
+    margin-left: 0.75rem; /* Spacing between icon and text */
+    font-size: 0.875rem; /* Smaller font size */
+    opacity: 0; /* Hidden by default */
+    transition: opacity 0.3s ease-in-out; /* Smooth fade-in effect */
+    white-space: nowrap; /* Prevent text wrapping */
+}
+
+/* Hover effects */
+#sidebar:hover nav button span {
+    opacity: 1; /* Show text on hover */
+}
+
+#sidebar nav button:hover {
+    color: white; /* Change icon color on hover */
+}
+
+/* Main content styling */
+.main-content {
+    margin-left: 64px; /*Match the collapsed width of the sidebar
+    padding: 1rem; /* Add padding for spacing */
+    transition: none; /* No transition for content */
+    position: relative; /* Ensure content stays in place */
+    z-index: 10; /* Ensure content stays below the sidebar */
+}
+    </style>
+</head>
+<body>
+    <div class="flex h-screen bg-gray-100">
+        <!-- Sidebar -->
+        <div id="sidebar" class="w-16 bg-black flex flex-col items-center py-6 space-y-8 lg:w-20 hover:w-48 transition-all duration-300 group">
+            <!-- Logo or Icon -->
+            <div class="text-white">
+                <i data-lucide="layout-grid" class="w-6 h-6"></i>
             </div>
+            <!-- Navigation Buttons -->
+            <nav class="flex flex-col space-y-6">
+                <!-- Refresh Button -->
+                <button class="p-2 text-gray-400 hover:text-white transition-colors flex items-center">
+                    <i data-lucide="refresh-cw" class="w-5 h-5"></i>
+                    <span class="ml-2 text-sm opacity-0 group-hover:opacity-100 transition-opacity duration-300">Refresh</span>
+                </button>
+                <!-- Wallet Button -->
+                <button class="p-2 text-gray-400 hover:text-white transition-colors flex items-center">
+                    <i data-lucide="wallet" class="w-5 h-5"></i>
+                    <span class="ml-2 text-sm opacity-0 group-hover:opacity-100 transition-opacity duration-300">Wallet</span>
+                </button>
+                <!-- File Text Button -->
+                <button class="p-2 text-gray-400 hover:text-white transition-colors flex items-center">
+                    <i data-lucide="file-text" class="w-5 h-5"></i>
+                    <span class="ml-2 text-sm opacity-0 group-hover:opacity-100 transition-opacity duration-300">Documents</span>
+                </button>
+                <!-- Settings Button -->
+                <button class="p-2 text-gray-400 hover:text-white transition-colors flex items-center">
+                    <i data-lucide="settings" class="w-5 h-5"></i>
+                    <span class="ml-2 text-sm opacity-0 group-hover:opacity-100 transition-opacity duration-300">Settings</span>
+                </button>
+            </nav>
         </div>
 
-        <!-- Profile Details -->
-        <div class="grid grid-cols-1 md:grid-cols-2 gap-4 sm:gap-6">
-            <!-- Personal Information -->
-            <div class="bg-white rounded-lg shadow-md p-6">
-                <h2 class="text-xl font-semibold mb-4">Personal Information</h2>
-                <div class="space-y-4">
-                    <div>
-                        <label class="block text-sm font-medium text-gray-700">Full Name</label>
-                        <p class="mt-1 text-gray-900">{{ user.first_name }} {{ user.last_name }}</p>
-                    </div>
-                    <div>
-                        <label class="block text-sm font-medium text-gray-700">Email</label>
-                        <p class="mt-1 text-gray-900">{{ user.email }}</p>
-                    </div>
-                    <div>
-                        <label class="block text-sm font-medium text-gray-700">Date Joined</label>
-                        <p class="mt-1 text-gray-900">{{ user.date_joined|date:"F j, Y" }}</p>
-                    </div>
+        <!-- Main Content -->
+        <div class="flex-1 overflow-auto main-content">
+            <!-- Header -->
+            <header class="bg-white p-4 flex flex-col md:flex-row items-center justify-between border-b">
+                <div class="flex items-center space-x-4 mb-4 md:mb-0">
+                    <!-- <i id="menuButton" data-lucide="menu" class="w-6 h-6 cursor-pointer"></i> -->
+                    <h1 class="text-xl font-semibold">Dashboard</h1>
                 </div>
-            </div>
-
-            <!-- Account Settings -->
-            <div class="bg-white rounded-lg shadow-md p-6">
-                <h2 class="text-xl font-semibold mb-4">Account Settings</h2>
-                <div class="space-y-4">
-                    <div>
-                        <label class="block text-sm font-medium text-gray-700">Username</label>
-                        <p class="mt-1 text-gray-900">{{ user.username }}</p>
-                    </div>
-                    <div>
-                        <label class="block text-sm font-medium text-gray-700">Password</label>
-                        <button class="mt-1 px-4 py-2 bg-gray-100 text-gray-700 rounded-md hover:bg-gray-200 transition-colors">
-                            Change Password
+                <div class="flex items-center space-x-4">
+                    <div class="relative inline-block">
+                        <!-- Bell Icon Button -->
+                        <button id="notificationButton" class="relative">
+                            <i data-lucide="bell" class="w-5 h-5 text-gray-500 hover:text-gray-700 cursor-pointer"></i>
+                            <span id="notification-count" class="absolute -top-2 -right-2 bg-red-500 text-white text-xs rounded-full px-1.5 py-0.5">
+                                2
+                            </span>
                         </button>
+                        
+                        <!-- Dropdown Menu -->
+                        <div id="notificationDropdown" class="hidden absolute right-0 mt-2 w-80 bg-white rounded-lg shadow-lg border border-gray-200 z-50">
+                            <!-- Dropdown Header -->
+                            <div class="px-4 py-3 border-b border-gray-200">
+                                <h3 class="text-sm font-semibold text-gray-700">Notifications</h3>
+                            </div>
+                            
+                            <!-- Notification Items -->
+                            <div class="max-h-64 overflow-y-auto">
+                                <!-- Notification Item 1 -->
+                                <a href="#" class="flex px-4 py-3 hover:bg-gray-50 border-b border-gray-200">
+                                    <div class="flex-shrink-0">
+                                        <i data-lucide="shopping-cart" class="w-5 h-5 text-blue-500"></i>
+                                    </div>
+                                    <div class="ml-3">
+                                        <p class="text-sm font-medium text-gray-900">New order received</p>
+                                        <p class="text-xs text-gray-500">Order #12345 from John Doe</p>
+                                        <p class="text-xs text-gray-400 mt-1">2 minutes ago</p>
+                                    </div>
+                                </a>
+                                
+                                <!-- Notification Item 2 -->
+                                <a href="#" class="flex px-4 py-3 hover:bg-gray-50">
+                                    <div class="flex-shrink-0">
+                                        <i data-lucide="alert-circle" class="w-5 h-5 text-red-500"></i>
+                                    </div>
+                                    <div class="ml-3">
+                                        <p class="text-sm font-medium text-gray-900">System Alert</p>
+                                        <p class="text-xs text-gray-500">Server load is high</p>
+                                        <p class="text-xs text-gray-400 mt-1">5 minutes ago</p>
+                                    </div>
+                                </a>
+                            </div>
+                            
+                            <!-- Dropdown Footer -->
+                            <div class="px-4 py-2 border-t border-gray-200">
+                                <a href="#" class="text-sm text-blue-600 hover:text-blue-800 font-medium">View all notifications</a>
+                            </div>
+                        </div>
                     </div>
-                    <div>
-                        <label class="block text-sm font-medium text-gray-700">Account Status</label>
-                        <p class="mt-1 text-green-600">Active</p>
-                    </div>
-                </div>
-            </div>
+                    <div class="relative inline-block">
+                        <!-- Profile Button -->
+                        <button id="profileButton" class="flex items-center space-x-2 hover:opacity-80">
+                            <span class="text-sm">{{ user.username }}</span>
+                            <div class="w-8 h-8 bg-orange-500 rounded-full flex items-center justify-center text-white">
+                                SS
+                            </div>
+                            <i data-lucide="chevron-down" class="w-4 h-4 text-gray-500"></i>
+                        </button>
 
-            <!-- Recent Activity -->
-            <div class="bg-white rounded-lg shadow-md p-6 md:col-span-2">
-                <h2 class="text-xl font-semibold mb-4">Recent Activity</h2>
-                <div class="space-y-4">
-                    <div class="flex items-center space-x-4">
-                        <div class="flex-shrink-0">
-                            <div class="h-8 w-8 rounded-full bg-indigo-100 flex items-center justify-center">
-                                <svg class="h-5 w-5 text-indigo-600" fill="none" stroke="currentColor" viewBox="0 0 24 24">
-                                    <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M12 6v6m0 0v6m0-6h6m-6 0H6"></path>
-                                </svg>
-                            </div>
-                        </div>
-                        <div>
-                            <p class="text-gray-900">Profile updated</p>
-                            <p class="text-sm text-gray-500">2 days ago</p>
-                        </div>
-                    </div>
-                    <div class="flex items-center space-x-4">
-                        <div class="flex-shrink-0">
-                            <div class="h-8 w-8 rounded-full bg-green-100 flex items-center justify-center">
-                                <svg class="h-5 w-5 text-green-600" fill="none" stroke="currentColor" viewBox="0 0 24 24">
-                                    <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M5 13l4 4L19 7"></path>
-                                </svg>
-                            </div>
-                        </div>
-                        <div>
-                            <p class="text-gray-900">Account created</p>
-                            <p class="text-sm text-gray-500">{{ user.date_joined|timesince }} ago</p>
+                        <!-- Profile Dropdown Menu -->
+                        <div id="profileDropdown" class="hidden absolute right-0 mt-2 w-48 bg-white rounded-lg shadow-lg border border-gray-200 z-50">
+                            <a href="#" class="flex items-center px-4 py-2 text-sm text-gray-700 hover:bg-gray-100 border-b border-gray-200">
+                                <i data-lucide="user" class="w-4 h-4 mr-2"></i>
+                                Profile
+                            </a>
+                            <a href="#" class="flex items-center px-4 py-2 text-sm text-gray-700 hover:bg-gray-100 border-b border-gray-200">
+                                <i data-lucide="settings" class="w-4 h-4 mr-2"></i>
+                                Settings
+                            </a>
+                            <a href="{% url 'logout' %}" class="flex items-center px-4 py-2 text-sm text-red-600 hover:bg-gray-100">
+                                <i data-lucide="log-out" class="w-4 h-4 mr-2"></i>
+                                Logout
+                            </a>
                         </div>
                     </div>
                 </div>
-            </div>
+            </header>
+
+            <!-- Main Content Area -->
+            <main class="p-6">
+                <div class="container mx-auto px-4 py-4 sm:py-8">
+                    <div class="max-w-4xl mx-auto">
+                        <!-- Profile Header -->
+                        <div class="bg-white rounded-lg shadow-md p-4 sm:p-6 mb-4 sm:mb-6">
+                            <div class="flex flex-col sm:flex-row items-center sm:space-x-6">
+                                <div class="h-20 w-20 sm:h-24 sm:w-24 rounded-full overflow-hidden bg-gray-100 mb-4 sm:mb-0">
+                                    <img src="https://images.unsplash.com/photo-1545167622-3a6ac756afa4?ixlib=rb-1.2.1&amp;ixid=eyJhcHBfaWQiOjEyMDd9&amp;auto=format&amp;fit=crop&amp;w=1256&amp;q=80" alt="Profile Picture" class="h-full w-full object-cover">
+                                </div>
+                                <div class="text-center sm:text-left">
+                                    <h1 class="text-xl sm:text-2xl font-bold text-gray-900">{{ user.username }}</h1>
+                                    <p class="text-gray-600">{{ user.email }}</p>
+                                    <button class="mt-2 px-3 py-1.5 sm:px-4 sm:py-2 bg-indigo-600 text-white text-sm sm:text-base rounded-md hover:bg-indigo-700 transition-colors">
+                                        Edit Profile
+                                    </button>
+                                </div>
+                            </div>
+                        </div>
+                
+                        <!-- Profile Details -->
+                        <div class="grid grid-cols-1 md:grid-cols-2 gap-4 sm:gap-6">
+                            <!-- Personal Information -->
+                            <div class="bg-white rounded-lg shadow-md p-6">
+                                <h2 class="text-xl font-semibold mb-4">Personal Information</h2>
+                                <div class="space-y-4">
+                                    <div>
+                                        <label class="block text-sm font-medium text-gray-700">Full Name</label>
+                                        <p class="mt-1 text-gray-900">{{ user.first_name }} {{ user.last_name }}</p>
+                                    </div>
+                                    <div>
+                                        <label class="block text-sm font-medium text-gray-700">Email</label>
+                                        <p class="mt-1 text-gray-900">{{ user.email }}</p>
+                                    </div>
+                                    <div>
+                                        <label class="block text-sm font-medium text-gray-700">Date Joined</label>
+                                        <p class="mt-1 text-gray-900">{{ user.date_joined|date:"F j, Y" }}</p>
+                                    </div>
+                                </div>
+                            </div>
+                
+                            <!-- Account Settings -->
+                            <div class="bg-white rounded-lg shadow-md p-6">
+                                <h2 class="text-xl font-semibold mb-4">Account Settings</h2>
+                                <div class="space-y-4">
+                                    <div>
+                                        <label class="block text-sm font-medium text-gray-700">Username</label>
+                                        <p class="mt-1 text-gray-900">{{ user.username }}</p>
+                                    </div>
+                                    <div>
+                                        <label class="block text-sm font-medium text-gray-700">Password</label>
+                                        <button class="mt-1 px-4 py-2 bg-gray-100 text-gray-700 rounded-md hover:bg-gray-200 transition-colors">
+                                            Change Password
+                                        </button>
+                                    </div>
+                                    <div>
+                                        <label class="block text-sm font-medium text-gray-700">Account Status</label>
+                                        <p class="mt-1 text-green-600">Active</p>
+                                    </div>
+                                </div>
+                            </div>
+                
+                            <!-- Recent Activity -->
+                            <div class="bg-white rounded-lg shadow-md p-6 md:col-span-2">
+                                <h2 class="text-xl font-semibold mb-4">Recent Activity</h2>
+                                <div class="space-y-4">
+                                    <div class="flex items-center space-x-4">
+                                        <div class="flex-shrink-0">
+                                            <div class="h-8 w-8 rounded-full bg-indigo-100 flex items-center justify-center">
+                                                <svg class="h-5 w-5 text-indigo-600" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+                                                    <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M12 6v6m0 0v6m0-6h6m-6 0H6"></path>
+                                                </svg>
+                                            </div>
+                                        </div>
+                                        <div>
+                                            <p class="text-gray-900">Profile updated</p>
+                                            <p class="text-sm text-gray-500">2 days ago</p>
+                                        </div>
+                                    </div>
+                                    <div class="flex items-center space-x-4">
+                                        <div class="flex-shrink-0">
+                                            <div class="h-8 w-8 rounded-full bg-green-100 flex items-center justify-center">
+                                                <svg class="h-5 w-5 text-green-600" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+                                                    <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M5 13l4 4L19 7"></path>
+                                                </svg>
+                                            </div>
+                                        </div>
+                                        <div>
+                                            <p class="text-gray-900">Account created</p>
+                                            <p class="text-sm text-gray-500">{{ user.date_joined|timesince }} ago</p>
+                                        </div>
+                                    </div>
+                                </div>
+                            </div>
+                        </div>
+                    </div>
+                </div>
+            </main>
         </div>
     </div>
-</div>
-{% endblock %}
+
+    <script>
+        // Initialize Lucide icons
+        lucide.createIcons();
+
+        // Notification dropdown functionality
+        const notificationButton = document.getElementById('notificationButton');
+        const notificationDropdown = document.getElementById('notificationDropdown');
+        
+        // Toggle dropdown on button click
+        notificationButton.addEventListener('click', (e) => {
+            e.stopPropagation();
+            notificationDropdown.classList.toggle('hidden');
+        });
+        
+        // Close dropdown when clicking outside
+        document.addEventListener('click', (e) => {
+            if (!notificationButton.contains(e.target)) {
+                notificationDropdown.classList.add('hidden');
+            }
+        });
+
+        // Profile dropdown functionality
+        const profileButton = document.getElementById('profileButton');
+        const profileDropdown = document.getElementById('profileDropdown');
+        
+        profileButton.addEventListener('click', (e) => {
+            e.stopPropagation();
+            profileDropdown.classList.toggle('hidden');
+        });
+        
+        document.addEventListener('click', (e) => {
+            if (!profileButton.contains(e.target)) {
+                profileDropdown.classList.add('hidden');
+            }
+        });
+    </script>
+</body>
+</html>

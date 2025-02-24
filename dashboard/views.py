@@ -9,4 +9,4 @@ def home(request):
     return render(request, 'dashboard/home.html')
 
 def profile(request):
-    return render(request, 'dashboard/profile2.html')
+    return render(request, 'dashboard/profile.html')
