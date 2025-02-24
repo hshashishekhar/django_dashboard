@@ -1,287 +1,107 @@
-<!DOCTYPE html>
-<html lang="en">
-<head>
-    <meta charset="UTF-8">
-    <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    <title>Dashboard</title>
-    <script src="https://cdn.tailwindcss.com"></script>
-    <script src="https://cdn.jsdelivr.net/npm/chart.js"></script>
-    <script src="https://unpkg.com/lucide@latest"></script>
-    <style>
-        /* Base styles for the sidebar */
-        #sidebar {
-            width: 64px; /* Fixed width for collapsed state */
-            background-color: black;
-            flex-direction: column;
-            align-items: center;
-            padding-top: 1.5rem; /* Add vertical padding */
-            gap: 2rem; /* Space between items */
-            transition: width 0.3s ease-in-out; /* Smooth width transition */
-            position: fixed; /* Fix the sidebar in place */
-            top: 0; /* Stick to the top */
-            left: 0; /* Stick to the left */
-            height: 100vh; /* Full height */
-            z-index: 50; /* Ensure it appears above other elements */
-            overflow: hidden; /* Prevent content from overflowing */
-        }
+{% extends 'dashboard/base.html' %}
 
-        /* Expanded state on hover */
-        #sidebar:hover {
-            width: 192px; /* Fixed width for expanded state */
-        }
-
-        /* Icon container */
-        #sidebar .text-white {
-            display: flex;
-            justify-content: center;
-            align-items: center;
-            width: 100%;
-        }
-
-        /* Navigation buttons */
-        #sidebar nav button {
-            display: flex;
-            align-items: center;
-            justify-content: flex-start;
-            width: 100%;
-            padding: 0.75rem; /* Ensure proper padding */
-            color: gray; /* Default icon color */
-            transition: color 0.3s ease-in-out; /* Smooth color transition */
-        }
-
-        /* Icons */
-        #sidebar nav button i {
-            width: 1.25rem; /* Fixed size for icons */
-            height: 1.25rem;
-            transition: transform 0.3s ease-in-out; /* Optional: Add subtle animation */
-        }
-
-        /* Text labels */
-        #sidebar nav button span {
-            margin-left: 0.75rem; /* Spacing between icon and text */
-            font-size: 0.875rem; /* Smaller font size */
-            opacity: 0; /* Hidden by default */
-            transition: opacity 0.3s ease-in-out; /* Smooth fade-in effect */
-            white-space: nowrap; /* Prevent text wrapping */
-        }
-
-        /* Hover effects */
-        #sidebar:hover nav button span {
-            opacity: 1; /* Show text on hover */
-        }
-
-        #sidebar nav button:hover {
-            color: white; /* Change icon color on hover */
-        }
-
-        /* Main content styling */
-        .main-content {
-            margin-left: 64px; /*Match the collapsed width of the sidebar
-            padding: 1rem; /* Add padding for spacing */
-            transition: none; /* No transition for content */
-            position: relative; /* Ensure content stays in place */
-            z-index: 10; /* Ensure content stays below the sidebar */
-        }
-    </style>
-</head>
-<body>
-    <div class="flex h-screen bg-gray-100">
-        <!-- Sidebar -->
-        <div id="sidebar" class="w-16 bg-black flex flex-col items-center py-6 space-y-8 lg:w-20 hover:w-48 transition-all duration-300 group">
-            <!-- Logo or Icon -->
-            <div class="text-white">
-                <i data-lucide="layout-grid" class="w-6 h-6"></i>
+{% block content %}
+    <div class="max-w-5xl mx-auto">
+        <!-- Profile Header -->
+        <div class="mb-8 bg-gradient-to-r from-indigo-600 to-blue-500 rounded-2xl p-8 text-white shadow-lg">
+            <div class="flex flex-col md:flex-row items-center space-y-4 md:space-y-0 md:space-x-6">
+                <div class="h-24 w-24 rounded-full overflow-hidden bg-white/20 backdrop-blur-sm ring-4 ring-white/30">
+                    <img src="https://images.unsplash.com/photo-1545167622-3a6ac756afa4?ixlib=rb-1.2.1&amp;ixid=eyJhcHBfaWQiOjEyMDd9&amp;auto=format&amp;fit=crop&amp;w=1256&amp;q=80" alt="Profile Picture" class="h-full w-full object-cover">
+                </div>
+                <div>
+                    <h1 class="text-3xl font-bold">{{ user.username }}</h1>
+                    <p class="text-indigo-100 mt-1">{{ user.email }}</p>
+                    <button class="mt-4 px-6 py-2 bg-white/10 backdrop-blur-sm hover:bg-white/20 text-white rounded-lg transition-all duration-200 flex items-center space-x-2">
+                        <i data-lucide="edit" class="w-4 h-4"></i>
+                        <span>Edit Profile</span>
+                    </button>
+                </div>
             </div>
-            <!-- Navigation Buttons -->
-            <nav class="flex flex-col space-y-6">
-                <!-- Refresh Button -->
-                <button class="p-2 text-gray-400 hover:text-white transition-colors flex items-center">
-                    <i data-lucide="refresh-cw" class="w-5 h-5"></i>
-                    <span class="ml-2 text-sm opacity-0 group-hover:opacity-100 transition-opacity duration-300">Refresh</span>
-                </button>
-                <!-- Wallet Button -->
-                <button class="p-2 text-gray-400 hover:text-white transition-colors flex items-center">
-                    <i data-lucide="wallet" class="w-5 h-5"></i>
-                    <span class="ml-2 text-sm opacity-0 group-hover:opacity-100 transition-opacity duration-300">Wallet</span>
-                </button>
-                <!-- File Text Button -->
-                <button class="p-2 text-gray-400 hover:text-white transition-colors flex items-center">
-                    <i data-lucide="file-text" class="w-5 h-5"></i>
-                    <span class="ml-2 text-sm opacity-0 group-hover:opacity-100 transition-opacity duration-300">Documents</span>
-                </button>
-                <!-- Settings Button -->
-                <button class="p-2 text-gray-400 hover:text-white transition-colors flex items-center">
-                    <i data-lucide="settings" class="w-5 h-5"></i>
-                    <span class="ml-2 text-sm opacity-0 group-hover:opacity-100 transition-opacity duration-300">Settings</span>
-                </button>
-            </nav>
         </div>
 
-        <!-- Main Content -->
-        <div class="flex-1 overflow-auto main-content">
-            <!-- Header -->
-            <header class="bg-white p-4 flex flex-col md:flex-row items-center justify-between border-b">
-                <div class="flex items-center space-x-4 mb-4 md:mb-0">
-                    <!-- <i id="menuButton" data-lucide="menu" class="w-6 h-6 cursor-pointer"></i> -->
-                    <h1 class="text-xl font-semibold">Dashboard</h1>
+        <!-- Profile Details Grid -->
+        <div class="grid grid-cols-1 lg:grid-cols-2 gap-8">
+            <!-- Personal Information -->
+            <div class="bg-white rounded-2xl shadow-sm p-6 hover:shadow-md transition-shadow duration-300">
+                <div class="flex items-center mb-6">
+                    <i data-lucide="user" class="w-6 h-6 text-indigo-600 mr-3"></i>
+                    <h2 class="text-xl font-semibold text-gray-800">Personal Information</h2>
                 </div>
-                <div class="flex items-center space-x-4">
-                    <div class="relative inline-block">
-                        <!-- Profile Button -->
-                        <button id="profileButton" class="flex items-center space-x-2 hover:opacity-80">
-                            <span class="text-sm">{{ user.username }}</span>
-                            <div class="w-8 h-8 bg-orange-500 rounded-full flex items-center justify-center text-white">
-                                SS
-                            </div>
-                            <i data-lucide="chevron-down" class="w-4 h-4 text-gray-500"></i>
+                <div class="space-y-6">
+                    <div>
+                        <label class="text-sm font-medium text-gray-700">Full Name</label>
+                        <p class="mt-2 text-gray-900 font-medium">{{ user.first_name }} {{ user.last_name }}</p>
+                    </div>
+                    <div>
+                        <label class="text-sm font-medium text-gray-700">Email</label>
+                        <p class="mt-2 text-gray-900 font-medium">{{ user.email }}</p>
+                    </div>
+                    <div>
+                        <label class="text-sm font-medium text-gray-700">Date Joined</label>
+                        <p class="mt-2 text-gray-900 font-medium">{{ user.date_joined|date:"F j, Y" }}</p>
+                    </div>
+                </div>
+            </div>
+
+            <!-- Account Settings -->
+            <div class="bg-white rounded-2xl shadow-sm p-6 hover:shadow-md transition-shadow duration-300">
+                <div class="flex items-center mb-6">
+                    <i data-lucide="settings" class="w-6 h-6 text-indigo-600 mr-3"></i>
+                    <h2 class="text-xl font-semibold text-gray-800">Account Settings</h2>
+                </div>
+                <div class="space-y-6">
+                    <div>
+                        <label class="text-sm font-medium text-gray-700">Username</label>
+                        <p class="mt-2 text-gray-900 font-medium">{{ user.username }}</p>
+                    </div>
+                    <div>
+                        <label class="text-sm font-medium text-gray-700">Password</label>
+                        <button class="mt-2 px-4 py-2 border border-gray-200 text-gray-700 rounded-lg hover:bg-gray-50 transition-all duration-200 flex items-center space-x-2">
+                            <i data-lucide="key" class="w-4 h-4"></i>
+                            <span>Change Password</span>
                         </button>
-
-                        <!-- Profile Dropdown Menu -->
-                        <div id="profileDropdown" class="hidden absolute right-0 mt-2 w-48 bg-white rounded-lg shadow-lg border border-gray-200 z-50">
-                            <a href="#" class="flex items-center px-4 py-2 text-sm text-gray-700 hover:bg-gray-100 border-b border-gray-200">
-                                <i data-lucide="user" class="w-4 h-4 mr-2"></i>
-                                Profile
-                            </a>
-                            <a href="#" class="flex items-center px-4 py-2 text-sm text-gray-700 hover:bg-gray-100 border-b border-gray-200">
-                                <i data-lucide="settings" class="w-4 h-4 mr-2"></i>
-                                Settings
-                            </a>
-                            <a href="{% url 'logout' %}" class="flex items-center px-4 py-2 text-sm text-red-600 hover:bg-gray-100">
-                                <i data-lucide="log-out" class="w-4 h-4 mr-2"></i>
-                                Logout
-                            </a>
+                    </div>
+                    <div>
+                        <label class="text-sm font-medium text-gray-700">Account Status</label>
+                        <div class="mt-2 flex items-center space-x-2">
+                            <span class="w-2 h-2 bg-green-500 rounded-full"></span>
+                            <span class="text-green-600 font-medium">Active</span>
                         </div>
                     </div>
                 </div>
-            </header>
+            </div>
 
-            <!-- Main Content Area -->
-            <main class="p-6 bg-gray-50">
-                <div class="max-w-5xl mx-auto">
-                    <!-- Profile Header -->
-                    <div class="mb-8 bg-gradient-to-r from-indigo-600 to-blue-500 rounded-2xl p-8 text-white shadow-lg">
-                        <div class="flex flex-col md:flex-row items-center space-y-4 md:space-y-0 md:space-x-6">
-                            <div class="h-24 w-24 rounded-full overflow-hidden bg-white/20 backdrop-blur-sm ring-4 ring-white/30">
-                                <img src="https://images.unsplash.com/photo-1545167622-3a6ac756afa4?ixlib=rb-1.2.1&amp;ixid=eyJhcHBfaWQiOjEyMDd9&amp;auto=format&amp;fit=crop&amp;w=1256&amp;q=80" alt="Profile Picture" class="h-full w-full object-cover">
+            <!-- Recent Activity -->
+            <div class="bg-white rounded-2xl shadow-sm p-6 hover:shadow-md transition-shadow duration-300 lg:col-span-2">
+                <div class="flex items-center mb-6">
+                    <i data-lucide="activity" class="w-6 h-6 text-indigo-600 mr-3"></i>
+                    <h2 class="text-xl font-semibold text-gray-800">Recent Activity</h2>
+                </div>
+                <div class="space-y-6">
+                    <div class="flex items-center space-x-4">
+                        <div class="flex-shrink-0">
+                            <div class="h-10 w-10 rounded-full bg-indigo-100 flex items-center justify-center">
+                                <i data-lucide="edit-3" class="w-5 h-5 text-indigo-600"></i>
                             </div>
-                            <div>
-                                <h1 class="text-3xl font-bold">{{ user.username }}</h1>
-                                <p class="text-indigo-100 mt-1">{{ user.email }}</p>
-                                <button class="mt-4 px-6 py-2 bg-white/10 backdrop-blur-sm hover:bg-white/20 text-white rounded-lg transition-all duration-200 flex items-center space-x-2">
-                                    <i data-lucide="edit" class="w-4 h-4"></i>
-                                    <span>Edit Profile</span>
-                                </button>
-                            </div>
+                        </div>
+                        <div>
+                            <p class="text-gray-900 font-medium">Profile updated</p>
+                            <p class="text-sm text-gray-500">2 days ago</p>
                         </div>
                     </div>
-
-                    <!-- Profile Details Grid -->
-                    <div class="grid grid-cols-1 lg:grid-cols-2 gap-8">
-                        <!-- Personal Information -->
-                        <div class="bg-white rounded-2xl shadow-sm p-6 hover:shadow-md transition-shadow duration-300">
-                            <div class="flex items-center mb-6">
-                                <i data-lucide="user" class="w-6 h-6 text-indigo-600 mr-3"></i>
-                                <h2 class="text-xl font-semibold text-gray-800">Personal Information</h2>
-                            </div>
-                            <div class="space-y-6">
-                                <div>
-                                    <label class="text-sm font-medium text-gray-700">Full Name</label>
-                                    <p class="mt-2 text-gray-900 font-medium">{{ user.first_name }} {{ user.last_name }}</p>
-                                </div>
-                                <div>
-                                    <label class="text-sm font-medium text-gray-700">Email</label>
-                                    <p class="mt-2 text-gray-900 font-medium">{{ user.email }}</p>
-                                </div>
-                                <div>
-                                    <label class="text-sm font-medium text-gray-700">Date Joined</label>
-                                    <p class="mt-2 text-gray-900 font-medium">{{ user.date_joined|date:"F j, Y" }}</p>
-                                </div>
+                    <div class="flex items-center space-x-4">
+                        <div class="flex-shrink-0">
+                            <div class="h-10 w-10 rounded-full bg-green-100 flex items-center justify-center">
+                                <i data-lucide="user-plus" class="w-5 h-5 text-green-600"></i>
                             </div>
                         </div>
-
-                        <!-- Account Settings -->
-                        <div class="bg-white rounded-2xl shadow-sm p-6 hover:shadow-md transition-shadow duration-300">
-                            <div class="flex items-center mb-6">
-                                <i data-lucide="settings" class="w-6 h-6 text-indigo-600 mr-3"></i>
-                                <h2 class="text-xl font-semibold text-gray-800">Account Settings</h2>
-                            </div>
-                            <div class="space-y-6">
-                                <div>
-                                    <label class="text-sm font-medium text-gray-700">Username</label>
-                                    <p class="mt-2 text-gray-900 font-medium">{{ user.username }}</p>
-                                </div>
-                                <div>
-                                    <label class="text-sm font-medium text-gray-700">Password</label>
-                                    <button class="mt-2 px-4 py-2 border border-gray-200 text-gray-700 rounded-lg hover:bg-gray-50 transition-all duration-200 flex items-center space-x-2">
-                                        <i data-lucide="key" class="w-4 h-4"></i>
-                                        <span>Change Password</span>
-                                    </button>
-                                </div>
-                                <div>
-                                    <label class="text-sm font-medium text-gray-700">Account Status</label>
-                                    <div class="mt-2 flex items-center space-x-2">
-                                        <span class="w-2 h-2 bg-green-500 rounded-full"></span>
-                                        <span class="text-green-600 font-medium">Active</span>
-                                    </div>
-                                </div>
-                            </div>
-                        </div>
-
-                        <!-- Recent Activity -->
-                        <div class="bg-white rounded-2xl shadow-sm p-6 hover:shadow-md transition-shadow duration-300 lg:col-span-2">
-                            <div class="flex items-center mb-6">
-                                <i data-lucide="activity" class="w-6 h-6 text-indigo-600 mr-3"></i>
-                                <h2 class="text-xl font-semibold text-gray-800">Recent Activity</h2>
-                            </div>
-                            <div class="space-y-6">
-                                <div class="flex items-center space-x-4">
-                                    <div class="flex-shrink-0">
-                                        <div class="h-10 w-10 rounded-full bg-indigo-100 flex items-center justify-center">
-                                            <i data-lucide="edit-3" class="w-5 h-5 text-indigo-600"></i>
-                                        </div>
-                                    </div>
-                                    <div>
-                                        <p class="text-gray-900 font-medium">Profile updated</p>
-                                        <p class="text-sm text-gray-500">2 days ago</p>
-                                    </div>
-                                </div>
-                                <div class="flex items-center space-x-4">
-                                    <div class="flex-shrink-0">
-                                        <div class="h-10 w-10 rounded-full bg-green-100 flex items-center justify-center">
-                                            <i data-lucide="user-plus" class="w-5 h-5 text-green-600"></i>
-                                        </div>
-                                    </div>
-                                    <div>
-                                        <p class="text-gray-900 font-medium">Account created</p>
-                                        <p class="text-sm text-gray-500">{{ user.date_joined|timesince }} ago</p>
-                                    </div>
-                                </div>
-                            </div>
+                        <div>
+                            <p class="text-gray-900 font-medium">Account created</p>
+                            <p class="text-sm text-gray-500">{{ user.date_joined|timesince }} ago</p>
                         </div>
                     </div>
                 </div>
-            </main>
+            </div>
         </div>
     </div>
-
-    <script>
-        // Initialize Lucide icons
-        lucide.createIcons();
-
-        // Profile dropdown functionality
-        const profileButton = document.getElementById('profileButton');
-        const profileDropdown = document.getElementById('profileDropdown');
-        
-        profileButton.addEventListener('click', (e) => {
-            e.stopPropagation();
-            profileDropdown.classList.toggle('hidden');
-        });
-        
-        document.addEventListener('click', (e) => {
-            if (!profileButton.contains(e.target)) {
-                profileDropdown.classList.add('hidden');
-            }
-        });
-    </script>
-</body>
-</html>
+{% endblock %}

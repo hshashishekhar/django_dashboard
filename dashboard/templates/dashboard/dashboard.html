@@ -1,651 +1,391 @@
-<!DOCTYPE html>
-<html lang="en">
-<head>
-    <meta charset="UTF-8">
-    <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    <title>Dashboard</title>
-    <script src="https://cdn.tailwindcss.com"></script>
-    <script src="https://cdn.jsdelivr.net/npm/chart.js"></script>
-    <script src="https://unpkg.com/lucide@latest"></script>
-    <style>
-        /* Add these dark mode styles */
-        .dark body {
-            background-color: #1a1a1a;
-            color: #ffffff;
-        }
+{% extends 'dashboard/base.html' %}
 
-        .dark .bg-white {
-            background-color: #2d2d2d;
-        }
-
-        .dark .text-gray-700 {
-            color: #e5e5e5;
-        }
-
-        .dark .text-gray-600 {
-            color: #d1d1d1;
-        }
-
-        .dark .text-gray-500 {
-            color: #a3a3a3;
-        }
-
-        .dark .text-gray-900 {
-            color: #ffffff;
-        }
-
-        .dark .border-gray-200 {
-            border-color: #404040;
-        }
-
-        .dark .hover\:bg-gray-100:hover {
-            background-color: #404040;
-        }
-
-        /* Add to your existing dark mode styles in the <style> section */
-        .dark .text-gray-800 {
-            color: #ffffff;
-        }
-
-        .dark .bg-gray-50 {
-            background-color: #1a1a1a;
-        }
-
-        .dark thead.bg-gray-50 {
-            background-color: #2d2d2d;
-        }
-
-        .dark .bg-white {
-            background-color: #2d2d2d;
-        }
-
-        .dark .divide-gray-200 > * {
-            border-color: #404040;
-        }
-
-        /* Chart specific dark mode styles */
-        .dark canvas {
-            filter: invert(1) hue-rotate(180deg);
-        }
-        .dark .hover\:bg-gray-100:hover {
-            background-color: #404040;
-        }
-        .dark .bg-gray-50 {
-            background-color: #1a1a1a;
-        }
-
-        /* Base styles for the sidebar */
-        #sidebar {
-            width: 64px; /* Fixed width for collapsed state */
-            background-color: black;
-            flex-direction: column;
-            align-items: center;
-            padding-top: 1.5rem; /* Add vertical padding */
-            gap: 2rem; /* Space between items */
-            transition: width 0.3s ease-in-out; /* Smooth width transition */
-            position: fixed; /* Fix the sidebar in place */
-            top: 0; /* Stick to the top */
-            left: 0; /* Stick to the left */
-            height: 100vh; /* Full height */
-            z-index: 50; /* Ensure it appears above other elements */
-            overflow: hidden; /* Prevent content from overflowing */
-        }
-
-        /* Expanded state on hover */
-        #sidebar:hover {
-            width: 192px; /* Fixed width for expanded state */
-        }
-
-        /* Icon container */
-        #sidebar .text-white {
-            display: flex;
-            justify-content: center;
-            align-items: center;
-            width: 100%;
-        }
-
-        /* Navigation buttons */
-        #sidebar nav button {
-            display: flex;
-            align-items: center;
-            justify-content: flex-start;
-            width: 100%;
-            padding: 0.75rem; /* Ensure proper padding */
-            color: gray; /* Default icon color */
-            transition: color 0.3s ease-in-out; /* Smooth color transition */
-        }
-
-        /* Icons */
-        #sidebar nav button i {
-            width: 1.25rem; /* Fixed size for icons */
-            height: 1.25rem;
-            transition: transform 0.3s ease-in-out; /* Optional: Add subtle animation */
-        }
-
-        /* Text labels */
-        #sidebar nav button span {
-            margin-left: 0.75rem; /* Spacing between icon and text */
-            font-size: 0.875rem; /* Smaller font size */
-            opacity: 0; /* Hidden by default */
-            transition: opacity 0.3s ease-in-out; /* Smooth fade-in effect */
-            white-space: nowrap; /* Prevent text wrapping */
-        }
-
-        /* Hover effects */
-        #sidebar:hover nav button span {
-            opacity: 1; /* Show text on hover */
-        }
-
-        #sidebar nav button:hover {
-            color: white; /* Change icon color on hover */
-        }
-
-        /* Main content styling */
-        .main-content {
-            margin-left: 64px; /*Match the collapsed width of the sidebar
-            padding: 1rem; /* Add padding for spacing */
-            transition: none; /* No transition for content */
-            position: relative; /* Ensure content stays in place */
-            z-index: 10; /* Ensure content stays below the sidebar */
-        }
-    </style>
-    <script>
-        tailwind.config = {
-            darkMode: 'class',
-            // ... any other existing config
-        }
-    </script>
-</head>
-<body>
-    <div class="flex h-screen bg-gray-100">
-        <!-- Sidebar -->
-        <div id="sidebar" class="w-16 bg-black flex flex-col items-center py-6 space-y-8 lg:w-20 hover:w-48 transition-all duration-300 group">
-            <!-- Logo or Icon -->
-            <div class="text-white">
-                <i data-lucide="layout-grid" class="w-6 h-6"></i>
+{% block content %}
+<!-- Cards Grid -->
+<div class="grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-4 gap-6 mb-8">
+    <!-- Card 1 -->
+    <div class="bg-gradient-to-br from-blue-400 to-blue-500 rounded-2xl p-6 transition-all duration-300 transform hover:scale-105 hover:shadow-xl">
+        <div class="flex justify-between items-start mb-4">
+            <div>
+                <p class="text-sm text-white/80 mb-1">Total Menus</p>
+                <h3 class="text-3xl font-bold text-white">120</h3>
             </div>
-            <!-- Navigation Buttons -->
-            <nav class="flex flex-col space-y-6">
-                <!-- Refresh Button -->
-                <button class="p-2 text-gray-400 hover:text-white transition-colors flex items-center">
-                    <i data-lucide="refresh-cw" class="w-5 h-5"></i>
-                    <span class="ml-2 text-sm opacity-0 group-hover:opacity-100 transition-opacity duration-300">Refresh</span>
-                </button>
-                <!-- Wallet Button -->
-                <button class="p-2 text-gray-400 hover:text-white transition-colors flex items-center">
-                    <i data-lucide="wallet" class="w-5 h-5"></i>
-                    <span class="ml-2 text-sm opacity-0 group-hover:opacity-100 transition-opacity duration-300">Wallet</span>
-                </button>
-                <!-- File Text Button -->
-                <button class="p-2 text-gray-400 hover:text-white transition-colors flex items-center">
-                    <i data-lucide="file-text" class="w-5 h-5"></i>
-                    <span class="ml-2 text-sm opacity-0 group-hover:opacity-100 transition-opacity duration-300">Documents</span>
-                </button>
-                <!-- Settings Button -->
-                <button class="p-2 text-gray-400 hover:text-white transition-colors flex items-center">
-                    <i data-lucide="settings" class="w-5 h-5"></i>
-                    <span class="ml-2 text-sm opacity-0 group-hover:opacity-100 transition-opacity duration-300">Settings</span>
-                </button>
-            </nav>
+            <div class="p-3 rounded-xl bg-white/20 backdrop-blur-sm">
+                <i data-lucide="file-text" class="w-6 h-6 text-white"></i>
+            </div>
         </div>
+        <div class="w-full bg-white/20 rounded-full h-1.5 mt-6">
+            <div class="bg-white h-1.5 rounded-full" style="width: 45%"></div>
+        </div>
+        <p class="text-sm text-white/80 mt-2">45% increase</p>
+    </div>
 
-        <!-- Main Content -->
-        <div class="flex-1 overflow-auto main-content">
-            <!-- Header -->
-            <header class="bg-white p-4 flex flex-col md:flex-row items-center justify-between border-b">
-                <div class="flex items-center space-x-4 mb-4 md:mb-0">
-                    <!-- <i id="menuButton" data-lucide="menu" class="w-6 h-6 cursor-pointer"></i> -->
-                    <h1 class="text-xl font-semibold">Dashboard</h1>
-                </div>
-                <div class="flex items-center space-x-4">
-                    <!-- Theme Toggle Switch -->
-                    <div class="relative inline-block">
-                        <button id="themeToggle" class="p-2 rounded-lg hover:bg-gray-100 dark:hover:bg-gray-700 transition-colors">
-                            <!-- Sun icon for light mode -->
-                            <i data-lucide="sun" class="w-5 h-5 text-gray-500 dark:text-gray-400 hidden dark:block"></i>
-                            <!-- Moon icon for dark mode -->
-                            <i data-lucide="moon" class="w-5 h-5 text-gray-500 dark:text-gray-400 block dark:hidden"></i>
-                        </button>
-                    </div>
-                    <div class="relative inline-block">
-                        <!-- Profile Button -->
-                        <button id="profileButton" class="flex items-center space-x-2 hover:opacity-80">
-                            <span class="text-sm">{{ user.username }}</span>
-                            <div class="w-8 h-8 bg-orange-500 rounded-full flex items-center justify-center text-white">
-                                SS
-                            </div>
-                            <i data-lucide="chevron-down" class="w-4 h-4 text-gray-500"></i>
-                        </button>
+    <!-- Card 2 -->
+    <div class="bg-gradient-to-br from-red-400 to-red-500 rounded-2xl p-6 transition-all duration-300 transform hover:scale-105 hover:shadow-xl">
+        <div class="flex justify-between items-start mb-4">
+            <div>
+                <p class="text-sm text-white/80 mb-1">Total Orders Today</p>
+                <h3 class="text-3xl font-bold text-white">180</h3>
+            </div>
+            <div class="p-3 rounded-xl bg-white/20 backdrop-blur-sm">
+                <i data-lucide="shopping-bag" class="w-6 h-6 text-white"></i>
+            </div>
+        </div>
+        <div class="w-full bg-white/20 rounded-full h-1.5 mt-6">
+            <div class="bg-white h-1.5 rounded-full" style="width: 62%"></div>
+        </div>
+        <p class="text-sm text-white/80 mt-2">62% increase</p>
+    </div>
 
-                        <!-- Profile Dropdown Menu -->
-                        <div id="profileDropdown" class="hidden absolute right-0 mt-2 w-48 bg-white rounded-lg shadow-lg border border-gray-200 z-50">
-                            <a href="#" class="flex items-center px-4 py-2 text-sm text-gray-700 hover:bg-gray-100 border-b border-gray-200">
-                                <i data-lucide="user" class="w-4 h-4 mr-2"></i>
-                                Profile
-                            </a>
-                            <a href="#" class="flex items-center px-4 py-2 text-sm text-gray-700 hover:bg-gray-100 border-b border-gray-200">
-                                <i data-lucide="settings" class="w-4 h-4 mr-2"></i>
-                                Settings
-                            </a>
-                            <a href="{% url 'logout' %}" class="flex items-center px-4 py-2 text-sm text-red-600 hover:bg-gray-100">
-                                <i data-lucide="log-out" class="w-4 h-4 mr-2"></i>
-                                Logout
-                            </a>
-                        </div>
-                    </div>
-                </div>
-            </header>
+    <!-- Card 3 -->
+    <div class="bg-gradient-to-br from-green-400 to-green-500 rounded-2xl p-6 transition-all duration-300 transform hover:scale-105 hover:shadow-xl">
+        <div class="flex justify-between items-start mb-4">
+            <div>
+                <p class="text-sm text-white/80 mb-1">Total Clients Today</p>
+                <h3 class="text-3xl font-bold text-white">240</h3>
+            </div>
+            <div class="p-3 rounded-xl bg-white/20 backdrop-blur-sm">
+                <i data-lucide="users" class="w-6 h-6 text-white"></i>
+            </div>
+        </div>
+        <div class="w-full bg-white/20 rounded-full h-1.5 mt-6">
+            <div class="bg-white h-1.5 rounded-full" style="width: 80%"></div>
+        </div>
+        <p class="text-sm text-white/80 mt-2">80% increase</p>
+    </div>
 
-            <!-- Main Content Area -->
-            <main class="p-6 bg-gray-50">
-                <!-- Cards Grid -->
-                <div class="grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-4 gap-6 mb-8">
-                    <!-- Card 1 -->
-                    <div class="bg-gradient-to-br from-blue-400 to-blue-500 rounded-2xl p-6 transition-all duration-300 transform hover:scale-105 hover:shadow-xl">
-                        <div class="flex justify-between items-start mb-4">
-                            <div>
-                                <p class="text-sm text-white/80 mb-1">Total Menus</p>
-                                <h3 class="text-3xl font-bold text-white">120</h3>
-                            </div>
-                            <div class="p-3 rounded-xl bg-white/20 backdrop-blur-sm">
-                                <i data-lucide="file-text" class="w-6 h-6 text-white"></i>
-                            </div>
-                        </div>
-                        <div class="w-full bg-white/20 rounded-full h-1.5 mt-6">
-                            <div class="bg-white h-1.5 rounded-full" style="width: 45%"></div>
-                        </div>
-                        <p class="text-sm text-white/80 mt-2">45% increase</p>
-                    </div>
+    <!-- Card 4 -->
+    <div class="bg-gradient-to-br from-yellow-400 to-yellow-500 rounded-2xl p-6 transition-all duration-300 transform hover:scale-105 hover:shadow-xl">
+        <div class="flex justify-between items-start mb-4">
+            <div>
+                <p class="text-sm text-white/80 mb-1">Revenue Day Ratio</p>
+                <h3 class="text-3xl font-bold text-white">140</h3>
+            </div>
+            <div class="p-3 rounded-xl bg-white/20 backdrop-blur-sm">
+                <i data-lucide="trending-up" class="w-6 h-6 text-white"></i>
+            </div>
+        </div>
+        <div class="w-full bg-white/20 rounded-full h-1.5 mt-6">
+            <div class="bg-white h-1.5 rounded-full" style="width: 85%"></div>
+        </div>
+        <p class="text-sm text-white/80 mt-2">85% increase</p>
+    </div>
+</div>
 
-                    <!-- Card 2 -->
-                    <div class="bg-gradient-to-br from-red-400 to-red-500 rounded-2xl p-6 transition-all duration-300 transform hover:scale-105 hover:shadow-xl">
-                        <div class="flex justify-between items-start mb-4">
-                            <div>
-                                <p class="text-sm text-white/80 mb-1">Total Orders Today</p>
-                                <h3 class="text-3xl font-bold text-white">180</h3>
-                            </div>
-                            <div class="p-3 rounded-xl bg-white/20 backdrop-blur-sm">
-                                <i data-lucide="shopping-bag" class="w-6 h-6 text-white"></i>
-                            </div>
-                        </div>
-                        <div class="w-full bg-white/20 rounded-full h-1.5 mt-6">
-                            <div class="bg-white h-1.5 rounded-full" style="width: 62%"></div>
-                        </div>
-                        <p class="text-sm text-white/80 mt-2">62% increase</p>
-                    </div>
-
-                    <!-- Card 3 -->
-                    <div class="bg-gradient-to-br from-green-400 to-green-500 rounded-2xl p-6 transition-all duration-300 transform hover:scale-105 hover:shadow-xl">
-                        <div class="flex justify-between items-start mb-4">
-                            <div>
-                                <p class="text-sm text-white/80 mb-1">Total Clients Today</p>
-                                <h3 class="text-3xl font-bold text-white">240</h3>
-                            </div>
-                            <div class="p-3 rounded-xl bg-white/20 backdrop-blur-sm">
-                                <i data-lucide="users" class="w-6 h-6 text-white"></i>
-                            </div>
-                        </div>
-                        <div class="w-full bg-white/20 rounded-full h-1.5 mt-6">
-                            <div class="bg-white h-1.5 rounded-full" style="width: 80%"></div>
-                        </div>
-                        <p class="text-sm text-white/80 mt-2">80% increase</p>
-                    </div>
-
-                    <!-- Card 4 -->
-                    <div class="bg-gradient-to-br from-yellow-400 to-yellow-500 rounded-2xl p-6 transition-all duration-300 transform hover:scale-105 hover:shadow-xl">
-                        <div class="flex justify-between items-start mb-4">
-                            <div>
-                                <p class="text-sm text-white/80 mb-1">Revenue Day Ratio</p>
-                                <h3 class="text-3xl font-bold text-white">140</h3>
-                            </div>
-                            <div class="p-3 rounded-xl bg-white/20 backdrop-blur-sm">
-                                <i data-lucide="trending-up" class="w-6 h-6 text-white"></i>
-                            </div>
-                        </div>
-                        <div class="w-full bg-white/20 rounded-full h-1.5 mt-6">
-                            <div class="bg-white h-1.5 rounded-full" style="width: 85%"></div>
-                        </div>
-                        <p class="text-sm text-white/80 mt-2">85% increase</p>
-                    </div>
-                </div>
-
-                <!-- Charts Grid -->
-                <div class="grid grid-cols-1 lg:grid-cols-2 gap-6 mb-8">
-                    <!-- Revenue Chart -->
-                    <div class="bg-white p-6 rounded-2xl shadow-sm hover:shadow-md transition-shadow duration-300">
-                        <div class="flex flex-col md:flex-row items-center justify-between mb-6">
-                            <div class="flex items-center space-x-3">
-                                <i data-lucide="dollar-sign" class="w-6 h-6 text-indigo-600"></i>
-                                <h2 class="text-xl font-semibold text-gray-800">Revenue Overview</h2>
-                            </div>
-                            <div class="flex space-x-2 mt-4 md:mt-0">
-                                <button onclick="updateRevenueChart('monthly')" class="px-4 py-2 bg-gray-900 text-white text-sm rounded-lg revenue-filter" data-period="monthly">Monthly</button>
-                                <button onclick="updateRevenueChart('weekly')" class="px-4 py-2 text-gray-600 hover:bg-gray-100 text-sm rounded-lg revenue-filter" data-period="weekly">Weekly</button>
-                                <button onclick="updateRevenueChart('daily')" class="px-4 py-2 text-gray-600 hover:bg-gray-100 text-sm rounded-lg revenue-filter" data-period="daily">Today</button>
-                            </div>
-                        </div>
-                        <div class="h-72">
-                            <canvas id="revenueChart"></canvas>
-                        </div>
-                    </div>
-
-                    <!-- Orders Chart -->
-                    <div class="bg-white p-6 rounded-2xl shadow-sm hover:shadow-md transition-shadow duration-300">
-                        <div class="flex flex-col md:flex-row items-center justify-between mb-6">
-                            <div class="flex items-center space-x-3">
-                                <i data-lucide="shopping-cart" class="w-6 h-6 text-indigo-600"></i>
-                                <h2 class="text-xl font-semibold text-gray-800">Orders Summary</h2>
-                            </div>
-                            <div class="flex space-x-2 mt-4 md:mt-0">
-                                <button onclick="updateOrdersChart('monthly')" class="px-4 py-2 text-gray-600 hover:bg-gray-100 text-sm rounded-lg orders-filter" data-period="monthly">Monthly</button>
-                                <button onclick="updateOrdersChart('weekly')" class="px-4 py-2 bg-gray-900 text-white text-sm rounded-lg orders-filter" data-period="weekly">Weekly</button>
-                                <button onclick="updateOrdersChart('daily')" class="px-4 py-2 text-gray-600 hover:bg-gray-100 text-sm rounded-lg orders-filter" data-period="daily">Today</button>
-                            </div>
-                        </div>
-                        <div class="h-72">
-                            <canvas id="ordersChart"></canvas>
-                        </div>
-                    </div>
-                </div>
-
-                <!-- Order List -->
-                <div class="bg-white rounded-2xl shadow-sm hover:shadow-md transition-shadow duration-300">
-                    <div class="p-6 flex flex-col md:flex-row items-center justify-between border-b">
-                        <div class="flex items-center space-x-3">
-                            <i data-lucide="list" class="w-6 h-6 text-indigo-600"></i>
-                            <h2 class="text-xl font-semibold text-gray-800">Recent Orders</h2>
-                        </div>
-                        <div class="flex space-x-2 mt-4 md:mt-0">
-                            <button class="px-4 py-2 bg-gray-900 text-white text-sm rounded-lg">Monthly</button>
-                            <button class="px-4 py-2 text-gray-600 hover:bg-gray-100 text-sm rounded-lg">Weekly</button>
-                            <button class="px-4 py-2 text-gray-600 hover:bg-gray-100 text-sm rounded-lg">Today</button>
-                        </div>
-                    </div>
-                    <div class="overflow-x-auto">
-                        <table class="w-full">
-                            <thead class="bg-gray-50">
-                                <tr>
-                                    <th class="px-6 py-3 text-left text-xs font-medium text-gray-500 uppercase tracking-wider">No</th>
-                                    <th class="px-6 py-3 text-left text-xs font-medium text-gray-500 uppercase tracking-wider">ID</th>
-                                    <th class="px-6 py-3 text-left text-xs font-medium text-gray-500 uppercase tracking-wider">Date</th>
-                                    <th class="px-6 py-3 text-left text-xs font-medium text-gray-500 uppercase tracking-wider">Customer Name</th>
-                                    <th class="px-6 py-3 text-left text-xs font-medium text-gray-500 uppercase tracking-wider">Location</th>
-                                    <th class="px-6 py-3 text-left text-xs font-medium text-gray-500 uppercase tracking-wider">Amount</th>
-                                    <th class="px-6 py-3 text-left text-xs font-medium text-gray-500 uppercase tracking-wider">Status</th>
-                                    <th class="px-6 py-3 text-left text-xs font-medium text-gray-500 uppercase tracking-wider">Action</th>
-                                </tr>
-                            </thead>
-                            <tbody class="bg-white divide-y divide-gray-200">
-                                <tr>
-                                  <td class="px-6 py-4 whitespace-nowrap text-sm text-gray-500">1</td>
-                                  <td class="px-6 py-4 whitespace-nowrap text-sm font-medium text-gray-900">#12344</td>
-                                  <td class="px-6 py-4 whitespace-nowrap text-sm text-gray-500">Jan 26th, 2025</td>
-                                  <td class="px-6 py-4 whitespace-nowrap text-sm text-gray-900">Rene Higueta</td>
-                                  <td class="px-6 py-4 whitespace-nowrap text-sm text-gray-500">Bale Street London</td>
-                                  <td class="px-6 py-4 whitespace-nowrap text-sm font-medium text-gray-900">$34.20</td>
-                                  <td class="px-6 py-4 whitespace-nowrap">
-                                      <span class="px-2 inline-flex text-xs leading-5 font-semibold rounded-full bg-green-100 text-green-800">
-                                          New Order
-                                      </span>
-                                  </td>
-                                  <td class="px-6 py-4 whitespace-nowrap text-sm text-gray-500">
-                                      <button class="text-gray-400 hover:text-gray-600">
-                                          <i data-lucide="more-vertical" class="w-4 h-4"></i>
-                                      </button>
-                                  </td>
-                                </tr>
-                                <tr>
-                                  <td class="px-6 py-4 whitespace-nowrap text-sm text-gray-500">2</td>
-                                  <td class="px-6 py-4 whitespace-nowrap text-sm font-medium text-gray-900">#12366</td>
-                                  <td class="px-6 py-4 whitespace-nowrap text-sm text-gray-500">Jan 25th, 2025</td>
-                                  <td class="px-6 py-4 whitespace-nowrap text-sm text-gray-900">Jean Paul</td>
-                                  <td class="px-6 py-4 whitespace-nowrap text-sm text-gray-500">East Street Liverpool</td>
-                                  <td class="px-6 py-4 whitespace-nowrap text-sm font-medium text-gray-900">$54.20</td>
-                                  <td class="px-6 py-4 whitespace-nowrap">
-                                      <span class="px-2 inline-flex text-xs leading-5 font-semibold rounded-full bg-red-100 text-green-800">
-                                          Cancelled
-                                      </span>
-                                  </td>
-                                  <td class="px-6 py-4 whitespace-nowrap text-sm text-gray-500">
-                                      <button class="text-gray-400 hover:text-gray-600">
-                                          <i data-lucide="more-vertical" class="w-4 h-4"></i>
-                                      </button>
-                                  </td>
-                                </tr>
-                                <tr>
-                                    <td class="px-6 py-4 whitespace-nowrap text-sm text-gray-500">3</td>
-                                    <td class="px-6 py-4 whitespace-nowrap text-sm font-medium text-gray-900">#12345</td>
-                                    <td class="px-6 py-4 whitespace-nowrap text-sm text-gray-500">Jan 24th, 2025</td>
-                                    <td class="px-6 py-4 whitespace-nowrap text-sm text-gray-900">Roberto Carlo</td>
-                                    <td class="px-6 py-4 whitespace-nowrap text-sm text-gray-500">Corner Street 5th Londo</td>
-                                    <td class="px-6 py-4 whitespace-nowrap text-sm font-medium text-gray-900">$34.20</td>
-                                    <td class="px-6 py-4 whitespace-nowrap">
-                                        <span class="px-2 inline-flex text-xs leading-5 font-semibold rounded-full bg-green-100 text-green-800">
-                                            New Order
-                                        </span>
-                                    </td>
-                                    <td class="px-6 py-4 whitespace-nowrap text-sm text-gray-500">
-                                        <button class="text-gray-400 hover:text-gray-600">
-                                            <i data-lucide="more-vertical" class="w-4 h-4"></i>
-                                        </button>
-                                    </td>
-                                </tr>
-                                <tr>
-                                    <td class="px-6 py-4 whitespace-nowrap text-sm text-gray-500">4</td>
-                                    <td class="px-6 py-4 whitespace-nowrap text-sm font-medium text-gray-900">#12366</td>
-                                    <td class="px-6 py-4 whitespace-nowrap text-sm text-gray-500">Jan 22th, 2025</td>
-                                    <td class="px-6 py-4 whitespace-nowrap text-sm text-gray-900">Rohmad Khoir</td>
-                                    <td class="px-6 py-4 whitespace-nowrap text-sm text-gray-500">Lando Street 5th Yogos</td>
-                                    <td class="px-6 py-4 whitespace-nowrap text-sm font-medium text-gray-900">$44.25</td>
-                                    <td class="px-6 py-4 whitespace-nowrap">
-                                        <span class="px-2 inline-flex text-xs leading-5 font-semibold rounded-full bg-blue-100 text-blue-800">
-                                            On Delivery
-                                        </span>
-                                    </td>
-                                    <td class="px-6 py-4 whitespace-nowrap text-sm text-gray-500">
-                                        <button class="text-gray-400 hover:text-gray-600">
-                                            <i data-lucide="more-vertical" class="w-4 h-4"></i>
-                                        </button>
-                                    </td>
-                                </tr>
-                            </tbody>
-                        </table>
-                    </div>
-                </div>
-            </main>
+<!-- Charts Grid -->
+<div class="grid grid-cols-1 lg:grid-cols-2 gap-6 mb-8">
+    <!-- Revenue Chart -->
+    <div class="bg-white p-6 rounded-2xl shadow-sm hover:shadow-md transition-shadow duration-300">
+        <div class="flex flex-col md:flex-row items-center justify-between mb-6">
+            <div class="flex items-center space-x-3">
+                <i data-lucide="dollar-sign" class="w-6 h-6 text-indigo-600"></i>
+                <h2 class="text-xl font-semibold text-gray-800">Revenue Overview</h2>
+            </div>
+            <div class="flex space-x-2 mt-4 md:mt-0">
+                <button onclick="updateRevenueChart('monthly')" class="px-4 py-2 bg-gray-900 text-white text-sm rounded-lg revenue-filter" data-period="monthly">Monthly</button>
+                <button onclick="updateRevenueChart('weekly')" class="px-4 py-2 text-gray-600 hover:bg-gray-100 text-sm rounded-lg revenue-filter" data-period="weekly">Weekly</button>
+                <button onclick="updateRevenueChart('daily')" class="px-4 py-2 text-gray-600 hover:bg-gray-100 text-sm rounded-lg revenue-filter" data-period="daily">Today</button>
+            </div>
+        </div>
+        <div class="h-72">
+            <canvas id="revenueChart"></canvas>
         </div>
     </div>
 
+    <!-- Orders Chart -->
+    <div class="bg-white p-6 rounded-2xl shadow-sm hover:shadow-md transition-shadow duration-300">
+        <div class="flex flex-col md:flex-row items-center justify-between mb-6">
+            <div class="flex items-center space-x-3">
+                <i data-lucide="shopping-cart" class="w-6 h-6 text-indigo-600"></i>
+                <h2 class="text-xl font-semibold text-gray-800">Orders Summary</h2>
+            </div>
+            <div class="flex space-x-2 mt-4 md:mt-0">
+                <button onclick="updateOrdersChart('monthly')" class="px-4 py-2 text-gray-600 hover:bg-gray-100 text-sm rounded-lg orders-filter" data-period="monthly">Monthly</button>
+                <button onclick="updateOrdersChart('weekly')" class="px-4 py-2 bg-gray-900 text-white text-sm rounded-lg orders-filter" data-period="weekly">Weekly</button>
+                <button onclick="updateOrdersChart('daily')" class="px-4 py-2 text-gray-600 hover:bg-gray-100 text-sm rounded-lg orders-filter" data-period="daily">Today</button>
+            </div>
+        </div>
+        <div class="h-72">
+            <canvas id="ordersChart"></canvas>
+        </div>
+    </div>
+</div>
+
+<!-- Order List -->
+<div class="bg-white rounded-2xl shadow-sm hover:shadow-md transition-shadow duration-300">
+    <div class="p-6 flex flex-col md:flex-row items-center justify-between border-b">
+        <div class="flex items-center space-x-3">
+            <i data-lucide="list" class="w-6 h-6 text-indigo-600"></i>
+            <h2 class="text-xl font-semibold text-gray-800">Recent Orders</h2>
+        </div>
+        <div class="flex space-x-2 mt-4 md:mt-0">
+            <button class="px-4 py-2 bg-gray-900 text-white text-sm rounded-lg">Monthly</button>
+            <button class="px-4 py-2 text-gray-600 hover:bg-gray-100 text-sm rounded-lg">Weekly</button>
+            <button class="px-4 py-2 text-gray-600 hover:bg-gray-100 text-sm rounded-lg">Today</button>
+        </div>
+    </div>
+    <div class="overflow-x-auto">
+        <table class="w-full">
+            <thead class="bg-gray-50">
+                <tr>
+                    <th class="px-6 py-3 text-left text-xs font-medium text-gray-500 uppercase tracking-wider">No</th>
+                    <th class="px-6 py-3 text-left text-xs font-medium text-gray-500 uppercase tracking-wider">ID</th>
+                    <th class="px-6 py-3 text-left text-xs font-medium text-gray-500 uppercase tracking-wider">Date</th>
+                    <th class="px-6 py-3 text-left text-xs font-medium text-gray-500 uppercase tracking-wider">Customer Name</th>
+                    <th class="px-6 py-3 text-left text-xs font-medium text-gray-500 uppercase tracking-wider">Location</th>
+                    <th class="px-6 py-3 text-left text-xs font-medium text-gray-500 uppercase tracking-wider">Amount</th>
+                    <th class="px-6 py-3 text-left text-xs font-medium text-gray-500 uppercase tracking-wider">Status</th>
+                    <th class="px-6 py-3 text-left text-xs font-medium text-gray-500 uppercase tracking-wider">Action</th>
+                </tr>
+            </thead>
+            <tbody class="bg-white divide-y divide-gray-200">
+                <tr>
+                  <td class="px-6 py-4 whitespace-nowrap text-sm text-gray-500">1</td>
+                  <td class="px-6 py-4 whitespace-nowrap text-sm font-medium text-gray-900">#12344</td>
+                  <td class="px-6 py-4 whitespace-nowrap text-sm text-gray-500">Jan 26th, 2025</td>
+                  <td class="px-6 py-4 whitespace-nowrap text-sm text-gray-900">Rene Higueta</td>
+                  <td class="px-6 py-4 whitespace-nowrap text-sm text-gray-500">Bale Street London</td>
+                  <td class="px-6 py-4 whitespace-nowrap text-sm font-medium text-gray-900">$34.20</td>
+                  <td class="px-6 py-4 whitespace-nowrap">
+                      <span class="px-2 inline-flex text-xs leading-5 font-semibold rounded-full bg-green-100 text-green-800">
+                          New Order
+                      </span>
+                  </td>
+                  <td class="px-6 py-4 whitespace-nowrap text-sm text-gray-500">
+                      <button class="text-gray-400 hover:text-gray-600">
+                          <i data-lucide="more-vertical" class="w-4 h-4"></i>
+                      </button>
+                  </td>
+                </tr>
+                <tr>
+                  <td class="px-6 py-4 whitespace-nowrap text-sm text-gray-500">2</td>
+                  <td class="px-6 py-4 whitespace-nowrap text-sm font-medium text-gray-900">#12366</td>
+                  <td class="px-6 py-4 whitespace-nowrap text-sm text-gray-500">Jan 25th, 2025</td>
+                  <td class="px-6 py-4 whitespace-nowrap text-sm text-gray-900">Jean Paul</td>
+                  <td class="px-6 py-4 whitespace-nowrap text-sm text-gray-500">East Street Liverpool</td>
+                  <td class="px-6 py-4 whitespace-nowrap text-sm font-medium text-gray-900">$54.20</td>
+                  <td class="px-6 py-4 whitespace-nowrap">
+                      <span class="px-2 inline-flex text-xs leading-5 font-semibold rounded-full bg-red-100 text-green-800">
+                          Cancelled
+                      </span>
+                  </td>
+                  <td class="px-6 py-4 whitespace-nowrap text-sm text-gray-500">
+                      <button class="text-gray-400 hover:text-gray-600">
+                          <i data-lucide="more-vertical" class="w-4 h-4"></i>
+                      </button>
+                  </td>
+                </tr>
+                <tr>
+                    <td class="px-6 py-4 whitespace-nowrap text-sm text-gray-500">3</td>
+                    <td class="px-6 py-4 whitespace-nowrap text-sm font-medium text-gray-900">#12345</td>
+                    <td class="px-6 py-4 whitespace-nowrap text-sm text-gray-500">Jan 24th, 2025</td>
+                    <td class="px-6 py-4 whitespace-nowrap text-sm text-gray-900">Roberto Carlo</td>
+                    <td class="px-6 py-4 whitespace-nowrap text-sm text-gray-500">Corner Street 5th Londo</td>
+                    <td class="px-6 py-4 whitespace-nowrap text-sm font-medium text-gray-900">$34.20</td>
+                    <td class="px-6 py-4 whitespace-nowrap">
+                        <span class="px-2 inline-flex text-xs leading-5 font-semibold rounded-full bg-green-100 text-green-800">
+                            New Order
+                        </span>
+                    </td>
+                    <td class="px-6 py-4 whitespace-nowrap text-sm text-gray-500">
+                        <button class="text-gray-400 hover:text-gray-600">
+                            <i data-lucide="more-vertical" class="w-4 h-4"></i>
+                        </button>
+                    </td>
+                </tr>
+                <tr>
+                    <td class="px-6 py-4 whitespace-nowrap text-sm text-gray-500">4</td>
+                    <td class="px-6 py-4 whitespace-nowrap text-sm font-medium text-gray-900">#12366</td>
+                    <td class="px-6 py-4 whitespace-nowrap text-sm text-gray-500">Jan 22th, 2025</td>
+                    <td class="px-6 py-4 whitespace-nowrap text-sm text-gray-900">Rohmad Khoir</td>
+                    <td class="px-6 py-4 whitespace-nowrap text-sm text-gray-500">Lando Street 5th Yogos</td>
+                    <td class="px-6 py-4 whitespace-nowrap text-sm font-medium text-gray-900">$44.25</td>
+                    <td class="px-6 py-4 whitespace-nowrap">
+                        <span class="px-2 inline-flex text-xs leading-5 font-semibold rounded-full bg-blue-100 text-blue-800">
+                            On Delivery
+                        </span>
+                    </td>
+                    <td class="px-6 py-4 whitespace-nowrap text-sm text-gray-500">
+                        <button class="text-gray-400 hover:text-gray-600">
+                            <i data-lucide="more-vertical" class="w-4 h-4"></i>
+                        </button>
+                    </td>
+                </tr>
+            </tbody>
+        </table>
+    </div>
+</div>
+{% endblock %}
+
+{% block script %}
     <script>
-        // Initialize Lucide icons
-        lucide.createIcons();
-
-        // Theme toggle functionality
-        const themeToggle = document.getElementById('themeToggle');
-        
-        // Check for saved theme preference or default to light
-        if (localStorage.getItem('theme') === 'dark' || 
-            (!localStorage.getItem('theme') && window.matchMedia('(prefers-color-scheme: dark)').matches)) {
-            document.documentElement.classList.add('dark');
-        }
-
-        // Toggle theme
-        themeToggle.addEventListener('click', () => {
-            if (document.documentElement.classList.contains('dark')) {
-                document.documentElement.classList.remove('dark');
-                localStorage.setItem('theme', 'light');
-            } else {
-                document.documentElement.classList.add('dark');
-                localStorage.setItem('theme', 'dark');
-            }
-        });
         // Chart data for different time periods
         const chartData = {
-            revenue: {
-                monthly: {
-                    labels: ['Jan', 'Feb', 'Mar', 'Apr', 'May', 'Jun', 'Jul'],
-                    income: [10000, 12000, 15000, 13000, 18000, 17000, 19000],
-                    expenses: [8000, 9000, 10000, 11000, 12000, 13000, 14000]
-                },
-                weekly: {
-                    labels: ['Week 1', 'Week 2', 'Week 3', 'Week 4'],
-                    income: [4000, 4500, 5000, 5500],
-                    expenses: [3000, 3500, 3800, 4000]
-                },
-                daily: {
-                    labels: ['9AM', '12PM', '3PM', '6PM', '9PM'],
-                    income: [1000, 1500, 2000, 1800, 1600],
-                    expenses: [800, 1200, 1500, 1300, 1100]
-                }
-            },
-            orders: {
-                monthly: {
-                    labels: ['Jan', 'Feb', 'Mar', 'Apr'],
-                    orders: [48000, 52000, 50000, 54000],
-                    deliveries: [45000, 48000, 46000, 50000]
-                },
-                weekly: {
-                    labels: ['Jun 24', 'Jun 25', 'Jun 26', 'Jun 27'],
-                    orders: [12000, 19000, 15000, 17000],
-                    deliveries: [10000, 15000, 13000, 14000]
-                },
-                daily: {
-                    labels: ['9AM', '12PM', '3PM', '6PM', '9PM'],
-                    orders: [2000, 3500, 3000, 2800, 2500],
-                    deliveries: [1800, 3200, 2800, 2500, 2300]
-                }
-            }
+        revenue: {
+        monthly: {
+            labels: ['Jan', 'Feb', 'Mar', 'Apr', 'May', 'Jun', 'Jul'],
+            income: [10000, 12000, 15000, 13000, 18000, 17000, 19000],
+            expenses: [8000, 9000, 10000, 11000, 12000, 13000, 14000]
+        },
+        weekly: {
+            labels: ['Week 1', 'Week 2', 'Week 3', 'Week 4'],
+            income: [4000, 4500, 5000, 5500],
+            expenses: [3000, 3500, 3800, 4000]
+        },
+        daily: {
+            labels: ['9AM', '12PM', '3PM', '6PM', '9PM'],
+            income: [1000, 1500, 2000, 1800, 1600],
+            expenses: [800, 1200, 1500, 1300, 1100]
+        }
+        },
+        orders: {
+        monthly: {
+            labels: ['Jan', 'Feb', 'Mar', 'Apr'],
+            orders: [48000, 52000, 50000, 54000],
+            deliveries: [45000, 48000, 46000, 50000]
+        },
+        weekly: {
+            labels: ['Jun 24', 'Jun 25', 'Jun 26', 'Jun 27'],
+            orders: [12000, 19000, 15000, 17000],
+            deliveries: [10000, 15000, 13000, 14000]
+        },
+        daily: {
+            labels: ['9AM', '12PM', '3PM', '6PM', '9PM'],
+            orders: [2000, 3500, 3000, 2800, 2500],
+            deliveries: [1800, 3200, 2800, 2500, 2300]
+        }
+        }
         };
 
         // Initialize charts
         let revenueChart, ordersChart;
 
         function initializeCharts() {
-            // Revenue Line Chart
-            const revenueCtx = document.getElementById('revenueChart').getContext('2d');
-            revenueChart = new Chart(revenueCtx, {
-                type: 'line',
-                data: {
-                    labels: chartData.revenue.monthly.labels,
-                    datasets: [
-                        {
-                            label: 'Income',
-                            data: chartData.revenue.monthly.income,
-                            borderColor: '#B6A6E9',
-                            tension: 0.4,
-                            fill: false
-                        },
-                        {
-                            label: 'Expenses',
-                            data: chartData.revenue.monthly.expenses,
-                            borderColor: '#000000',
-                            tension: 0.4,
-                            fill: false
-                        }
-                    ]
+        // Revenue Line Chart
+        const revenueCtx = document.getElementById('revenueChart').getContext('2d');
+        revenueChart = new Chart(revenueCtx, {
+        type: 'line',
+        data: {
+            labels: chartData.revenue.monthly.labels,
+            datasets: [
+                {
+                    label: 'Income',
+                    data: chartData.revenue.monthly.income,
+                    borderColor: '#B6A6E9',
+                    tension: 0.4,
+                    fill: false
                 },
-                options: {
-                    responsive: true,
-                    maintainAspectRatio: false,
-                    plugins: {
-                        legend: {
-                            position: 'top',
-                            align: 'end'
-                        }
-                    },
-                    scales: {
-                        y: {
-                            beginAtZero: true,
-                            ticks: {
-                                callback: (value) => '$' + value.toLocaleString()
-                            }
-                        }
+                {
+                    label: 'Expenses',
+                    data: chartData.revenue.monthly.expenses,
+                    borderColor: '#000000',
+                    tension: 0.4,
+                    fill: false
+                }
+            ]
+        },
+        options: {
+            responsive: true,
+            maintainAspectRatio: false,
+            plugins: {
+                legend: {
+                    position: 'top',
+                    align: 'end'
+                }
+            },
+            scales: {
+                y: {
+                    beginAtZero: true,
+                    ticks: {
+                        callback: (value) => '$' + value.toLocaleString()
                     }
                 }
-            });
+            }
+        }
+        });
 
-            // Orders Bar Chart
-            const ordersCtx = document.getElementById('ordersChart').getContext('2d');
-            ordersChart = new Chart(ordersCtx, {
-                type: 'bar',
-                data: {
-                    labels: chartData.orders.weekly.labels,
-                    datasets: [
-                        {
-                            label: 'Orders',
-                            data: chartData.orders.weekly.orders,
-                            backgroundColor: '#000000',
-                            barThickness: 20,
-                            borderRadius: 4
-                        },
-                        {
-                            label: 'Deliveries',
-                            data: chartData.orders.weekly.deliveries,
-                            backgroundColor: '#B6A6E9',
-                            barThickness: 20,
-                            borderRadius: 4
-                        }
-                    ]
+        // Orders Bar Chart
+        const ordersCtx = document.getElementById('ordersChart').getContext('2d');
+        ordersChart = new Chart(ordersCtx, {
+        type: 'bar',
+        data: {
+            labels: chartData.orders.weekly.labels,
+            datasets: [
+                {
+                    label: 'Orders',
+                    data: chartData.orders.weekly.orders,
+                    backgroundColor: '#000000',
+                    barThickness: 20,
+                    borderRadius: 4
                 },
-                options: {
-                    responsive: true,
-                    maintainAspectRatio: false,
-                    plugins: {
-                        legend: {
-                            position: 'top',
-                            align: 'end'
-                        }
-                    },
-                    scales: {
-                        y: {
-                            beginAtZero: true,
-                            ticks: {
-                                callback: (value) => '$' + value.toLocaleString()
-                            }
-                        }
+                {
+                    label: 'Deliveries',
+                    data: chartData.orders.weekly.deliveries,
+                    backgroundColor: '#B6A6E9',
+                    barThickness: 20,
+                    borderRadius: 4
+                }
+            ]
+        },
+        options: {
+            responsive: true,
+            maintainAspectRatio: false,
+            plugins: {
+                legend: {
+                    position: 'top',
+                    align: 'end'
+                }
+            },
+            scales: {
+                y: {
+                    beginAtZero: true,
+                    ticks: {
+                        callback: (value) => '$' + value.toLocaleString()
                     }
                 }
-            });
+            }
+        }
+        });
         }
 
         // Update Revenue Chart
         function updateRevenueChart(period) {
-            // Update button styles
-            document.querySelectorAll('.revenue-filter').forEach(btn => {
-                if (btn.dataset.period === period) {
-                    btn.classList.remove('text-gray-600', 'hover:bg-gray-100');
-                    btn.classList.add('bg-gray-900', 'text-white');
-                } else {
-                    btn.classList.remove('bg-gray-900', 'text-white');
-                    btn.classList.add('text-gray-600', 'hover:bg-gray-100');
-                }
-            });
+        // Update button styles
+        document.querySelectorAll('.revenue-filter').forEach(btn => {
+        if (btn.dataset.period === period) {
+            btn.classList.remove('text-gray-600', 'hover:bg-gray-100');
+            btn.classList.add('bg-gray-900', 'text-white');
+        } else {
+            btn.classList.remove('bg-gray-900', 'text-white');
+            btn.classList.add('text-gray-600', 'hover:bg-gray-100');
+        }
+        });
 
-            // Update chart data
-            revenueChart.data.labels = chartData.revenue[period].labels;
-            revenueChart.data.datasets[0].data = chartData.revenue[period].income;
-            revenueChart.data.datasets[1].data = chartData.revenue[period].expenses;
-            revenueChart.update();
+        // Update chart data
+        revenueChart.data.labels = chartData.revenue[period].labels;
+        revenueChart.data.datasets[0].data = chartData.revenue[period].income;
+        revenueChart.data.datasets[1].data = chartData.revenue[period].expenses;
+        revenueChart.update();
         }
 
         // Update Orders Chart
         function updateOrdersChart(period) {
-            // Update button styles
-            document.querySelectorAll('.orders-filter').forEach(btn => {
-                if (btn.dataset.period === period) {
-                    btn.classList.remove('text-gray-600', 'hover:bg-gray-100');
-                    btn.classList.add('bg-gray-900', 'text-white');
-                } else {
-                    btn.classList.remove('bg-gray-900', 'text-white');
-                    btn.classList.add('text-gray-600', 'hover:bg-gray-100');
-                }
-            });
+        // Update button styles
+        document.querySelectorAll('.orders-filter').forEach(btn => {
+        if (btn.dataset.period === period) {
+            btn.classList.remove('text-gray-600', 'hover:bg-gray-100');
+            btn.classList.add('bg-gray-900', 'text-white');
+        } else {
+            btn.classList.remove('bg-gray-900', 'text-white');
+            btn.classList.add('text-gray-600', 'hover:bg-gray-100');
+        }
+        });
 
-            // Update chart data
-            ordersChart.data.labels = chartData.orders[period].labels;
-            ordersChart.data.datasets[0].data = chartData.orders[period].orders;
-            ordersChart.data.datasets[1].data = chartData.orders[period].deliveries;
-            ordersChart.update();
+        // Update chart data
+        ordersChart.data.labels = chartData.orders[period].labels;
+        ordersChart.data.datasets[0].data = chartData.orders[period].orders;
+        ordersChart.data.datasets[1].data = chartData.orders[period].deliveries;
+        ordersChart.update();
         }
 
         // Initialize charts when the page loads
@@ -654,20 +394,5 @@
         updateRevenueChart('monthly');
         updateOrdersChart('weekly');
 
-        // Profile dropdown functionality
-        const profileButton = document.getElementById('profileButton');
-        const profileDropdown = document.getElementById('profileDropdown');
-        
-        profileButton.addEventListener('click', (e) => {
-            e.stopPropagation();
-            profileDropdown.classList.toggle('hidden');
-        });
-        
-        document.addEventListener('click', (e) => {
-            if (!profileButton.contains(e.target)) {
-                profileDropdown.classList.add('hidden');
-            }
-        });
     </script>
-</body>
-</html>
+{% endblock %}

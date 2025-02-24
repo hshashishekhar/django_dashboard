@@ -3,12 +3,292 @@
 <head>
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    {% block title %}
-       <title>Dashboard</title>
+    <title>{% block title %}{% endblock %}</title>
+    <script src="https://cdn.tailwindcss.com"></script>
+    <script src="https://cdn.jsdelivr.net/npm/chart.js"></script>
+    <script src="https://unpkg.com/lucide@latest"></script>
+    {% block style %}
     {% endblock %}
-    <link href="https://cdn.jsdelivr.net/npm/tailwindcss@2.2.19/dist/tailwind.min.css" rel="stylesheet">
+    <style>
+        /* Add these dark mode styles */
+        .dark body {
+            background-color: #1a1a1a;
+            color: #ffffff;
+        }
+
+        .dark .bg-white {
+            background-color: #2d2d2d;
+        }
+
+        .dark .text-gray-700 {
+            color: #e5e5e5;
+        }
+
+        .dark .text-gray-600 {
+            color: #d1d1d1;
+        }
+
+        .dark .text-gray-500 {
+            color: #a3a3a3;
+        }
+
+        .dark .text-gray-900 {
+            color: #ffffff;
+        }
+
+        .dark .border-gray-200 {
+            border-color: #404040;
+        }
+
+        .dark .hover\:bg-gray-100:hover {
+            background-color: #404040;
+        }
+
+        /* Add to your existing dark mode styles in the <style> section */
+        .dark .text-gray-800 {
+            color: #ffffff;
+        }
+
+        .dark .bg-gray-50 {
+            background-color: #1a1a1a;
+        }
+
+        .dark thead.bg-gray-50 {
+            background-color: #2d2d2d;
+        }
+
+        .dark .bg-white {
+            background-color: #2d2d2d;
+        }
+
+        .dark .divide-gray-200 > * {
+            border-color: #404040;
+        }
+
+        /* Chart specific dark mode styles */
+        .dark canvas {
+            filter: invert(1) hue-rotate(180deg);
+        }
+        .dark .hover\:bg-gray-100:hover {
+            background-color: #404040;
+        }
+        .dark .bg-gray-50 {
+            background-color: #1a1a1a;
+        }
+
+        /* Base styles for the sidebar */
+        #sidebar {
+            width: 64px; /* Fixed width for collapsed state */
+            background-color: black;
+            flex-direction: column;
+            align-items: center;
+            padding-top: 1.5rem; /* Add vertical padding */
+            gap: 2rem; /* Space between items */
+            transition: width 0.3s ease-in-out; /* Smooth width transition */
+            position: fixed; /* Fix the sidebar in place */
+            top: 0; /* Stick to the top */
+            left: 0; /* Stick to the left */
+            height: 100vh; /* Full height */
+            z-index: 50; /* Ensure it appears above other elements */
+            overflow: hidden; /* Prevent content from overflowing */
+        }
+
+        /* Expanded state on hover */
+        #sidebar:hover {
+            width: 192px; /* Fixed width for expanded state */
+        }
+
+        /* Icon container */
+        #sidebar .text-white {
+            display: flex;
+            justify-content: center;
+            align-items: center;
+            width: 100%;
+        }
+
+        /* Navigation buttons */
+        #sidebar nav button {
+            display: flex;
+            align-items: center;
+            justify-content: flex-start;
+            width: 100%;
+            padding: 0.75rem; /* Ensure proper padding */
+            color: gray; /* Default icon color */
+            transition: color 0.3s ease-in-out; /* Smooth color transition */
+        }
+
+        /* Icons */
+        #sidebar nav button i {
+            width: 1.25rem; /* Fixed size for icons */
+            height: 1.25rem;
+            transition: transform 0.3s ease-in-out; /* Optional: Add subtle animation */
+        }
+
+        /* Text labels */
+        #sidebar nav button span {
+            margin-left: 0.75rem; /* Spacing between icon and text */
+            font-size: 0.875rem; /* Smaller font size */
+            opacity: 0; /* Hidden by default */
+            transition: opacity 0.3s ease-in-out; /* Smooth fade-in effect */
+            white-space: nowrap; /* Prevent text wrapping */
+        }
+
+        /* Hover effects */
+        #sidebar:hover nav button span {
+            opacity: 1; /* Show text on hover */
+        }
+
+        #sidebar nav button:hover {
+            color: white; /* Change icon color on hover */
+        }
+
+        /* Main content styling */
+        .main-content {
+            margin-left: 64px; /*Match the collapsed width of the sidebar
+            padding: 1rem; /* Add padding for spacing */
+            transition: none; /* No transition for content */
+            position: relative; /* Ensure content stays in place */
+            z-index: 10; /* Ensure content stays below the sidebar */
+        }
+    </style>
+    {% block head_script %}
+    {% endblock %}
+    <script>
+        tailwind.config = {
+            darkMode: 'class',
+            // ... any other existing config
+        }
+    </script>
 </head>
 <body>
-    {% block content %}{% endblock %}
+    <div class="flex h-screen bg-gray-100">
+        <!-- Sidebar -->
+        <div id="sidebar" class="w-16 bg-black flex flex-col items-center py-6 space-y-8 lg:w-20 hover:w-48 transition-all duration-300 group">
+            <!-- Logo or Icon -->
+            <div class="text-white">
+                <i data-lucide="layout-grid" class="w-6 h-6"></i>
+            </div>
+            <!-- Navigation Buttons -->
+            <nav class="flex flex-col space-y-6">
+                <!-- Refresh Button -->
+                <button class="p-2 text-gray-400 hover:text-white transition-colors flex items-center">
+                    <i data-lucide="refresh-cw" class="w-5 h-5"></i>
+                    <span class="ml-2 text-sm opacity-0 group-hover:opacity-100 transition-opacity duration-300">Refresh</span>
+                </button>
+                <!-- Wallet Button -->
+                <button class="p-2 text-gray-400 hover:text-white transition-colors flex items-center">
+                    <i data-lucide="wallet" class="w-5 h-5"></i>
+                    <span class="ml-2 text-sm opacity-0 group-hover:opacity-100 transition-opacity duration-300">Wallet</span>
+                </button>
+                <!-- File Text Button -->
+                <button class="p-2 text-gray-400 hover:text-white transition-colors flex items-center">
+                    <i data-lucide="file-text" class="w-5 h-5"></i>
+                    <span class="ml-2 text-sm opacity-0 group-hover:opacity-100 transition-opacity duration-300">Documents</span>
+                </button>
+                <!-- Settings Button -->
+                <button class="p-2 text-gray-400 hover:text-white transition-colors flex items-center">
+                    <i data-lucide="settings" class="w-5 h-5"></i>
+                    <span class="ml-2 text-sm opacity-0 group-hover:opacity-100 transition-opacity duration-300">Settings</span>
+                </button>
+            </nav>
+        </div>
+
+        <!-- Main Content -->
+        <div class="flex-1 overflow-auto main-content">
+            <!-- Header -->
+            <header class="bg-white p-4 flex flex-col md:flex-row items-center justify-between border-b">
+                <div class="flex items-center space-x-4 mb-4 md:mb-0">
+                    <!-- <i id="menuButton" data-lucide="menu" class="w-6 h-6 cursor-pointer"></i> -->
+                    <h1 class="text-xl font-semibold">Dashboard</h1>
+                </div>
+                <div class="flex items-center space-x-4">
+                    <!-- Theme Toggle Switch -->
+                    <div class="relative inline-block">
+                        <button id="themeToggle" class="p-2 rounded-lg hover:bg-gray-100 dark:hover:bg-gray-700 transition-colors">
+                            <!-- Sun icon for light mode -->
+                            <i data-lucide="sun" class="w-5 h-5 text-gray-500 dark:text-gray-400 hidden dark:block"></i>
+                            <!-- Moon icon for dark mode -->
+                            <i data-lucide="moon" class="w-5 h-5 text-gray-500 dark:text-gray-400 block dark:hidden"></i>
+                        </button>
+                    </div>
+                    <div class="relative inline-block">
+                        <!-- Profile Button -->
+                        <button id="profileButton" class="flex items-center space-x-2 hover:opacity-80">
+                            <span class="text-sm">{{ user.username }}</span>
+                            <div class="w-8 h-8 bg-orange-500 rounded-full flex items-center justify-center text-white">
+                                SS
+                            </div>
+                            <i data-lucide="chevron-down" class="w-4 h-4 text-gray-500"></i>
+                        </button>
+
+                        <!-- Profile Dropdown Menu -->
+                        <div id="profileDropdown" class="hidden absolute right-0 mt-2 w-48 bg-white rounded-lg shadow-lg border border-gray-200 z-50">
+                            <a href="#" class="flex items-center px-4 py-2 text-sm text-gray-700 hover:bg-gray-100 border-b border-gray-200">
+                                <i data-lucide="user" class="w-4 h-4 mr-2"></i>
+                                Profile
+                            </a>
+                            <a href="#" class="flex items-center px-4 py-2 text-sm text-gray-700 hover:bg-gray-100 border-b border-gray-200">
+                                <i data-lucide="settings" class="w-4 h-4 mr-2"></i>
+                                Settings
+                            </a>
+                            <a href="{% url 'logout' %}" class="flex items-center px-4 py-2 text-sm text-red-600 hover:bg-gray-100">
+                                <i data-lucide="log-out" class="w-4 h-4 mr-2"></i>
+                                Logout
+                            </a>
+                        </div>
+                    </div>
+                </div>
+            </header>
+
+            <!-- Main Content Area -->
+            <main class="p-6 bg-gray-50">
+                {% block content %}
+                
+                {% endblock %}
+            </main>
+        </div>
+    </div>
+    {% block script %}
+        
+    {% endblock %}
+    <script>
+        // Initialize Lucide icons
+        lucide.createIcons();
+
+        // Theme toggle functionality
+        const themeToggle = document.getElementById('themeToggle');
+        
+        // Check for saved theme preference or default to light
+        if (localStorage.getItem('theme') === 'dark' || 
+            (!localStorage.getItem('theme') && window.matchMedia('(prefers-color-scheme: dark)').matches)) {
+            document.documentElement.classList.add('dark');
+        }
+
+        // Toggle theme
+        themeToggle.addEventListener('click', () => {
+            if (document.documentElement.classList.contains('dark')) {
+                document.documentElement.classList.remove('dark');
+                localStorage.setItem('theme', 'light');
+            } else {
+                document.documentElement.classList.add('dark');
+                localStorage.setItem('theme', 'dark');
+            }
+        });
+
+        // Profile dropdown functionality
+        const profileButton = document.getElementById('profileButton');
+        const profileDropdown = document.getElementById('profileDropdown');
+        
+        profileButton.addEventListener('click', (e) => {
+            e.stopPropagation();
+            profileDropdown.classList.toggle('hidden');
+        });
+        
+        document.addEventListener('click', (e) => {
+            if (!profileButton.contains(e.target)) {
+                profileDropdown.classList.add('hidden');
+            }
+        });
+    </script>
 </body>
 </html>
