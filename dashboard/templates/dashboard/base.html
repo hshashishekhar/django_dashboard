@@ -17,7 +17,7 @@
         }
 
         .dark .bg-white {
-            background-color: #2d2d2d;
+            background-color: #000000;
         }
 
         .dark .text-gray-700 {
@@ -57,10 +57,6 @@
             background-color: #2d2d2d;
         }
 
-        .dark .bg-white {
-            background-color: #2d2d2d;
-        }
-
         .dark .divide-gray-200 > * {
             border-color: #404040;
         }
@@ -79,7 +75,7 @@
         /* Base styles for the sidebar */
         #sidebar {
             width: 64px; /* Fixed width for collapsed state */
-            background-color: black;
+            background-color: rgb(0, 0, 0);
             flex-direction: column;
             align-items: center;
             padding-top: 1.5rem; /* Add vertical padding */
@@ -163,7 +159,7 @@
 <body>
     <div class="flex h-screen bg-gray-100">
         <!-- Sidebar -->
-        <div id="sidebar" class="w-16 bg-black flex flex-col items-center py-6 space-y-8 lg:w-20 hover:w-48 transition-all duration-300 ease-in-out group">
+        <div id="sidebar" class="w-16 flex flex-col items-center py-6 space-y-8 lg:w-20 hover:w-48 transition-all duration-300 ease-in-out group">
             <!-- Logo or Icon -->
             <div class="text-white">
                 <i data-lucide="layout-grid" class="w-6 h-6"></i>
@@ -186,10 +182,12 @@
                     <span class="ml-2 text-sm opacity-0 group-hover:opacity-100 transition-opacity duration-300 hidden group-hover:block">Documents</span>
                 </button>
                 <!-- Settings Button -->
-                <button class="p-2 text-gray-400 hover:text-white transition-colors flex items-center justify-center lg:justify-start">
-                    <i data-lucide="settings" class="w-5 h-5"></i>
-                    <span class="ml-2 text-sm opacity-0 group-hover:opacity-100 transition-opacity duration-300 hidden group-hover:block">Settings</span>
-                </button>
+                <a href="{% url 'settings' %}">
+                    <button class="p-2 text-gray-400 hover:text-white transition-colors flex items-center justify-center lg:justify-start">
+                        <i data-lucide="settings" class="w-5 h-5"></i>
+                        <span class="ml-2 text-sm opacity-0 group-hover:opacity-100 transition-opacity duration-300 hidden group-hover:block">Settings</span>
+                    </button>
+                </a>
             </nav>
         </div>
 
@@ -198,7 +196,7 @@
             <!-- Header -->
             <header class="bg-white p-4 flex flex-col md:flex-row items-center justify-between border-b">
                 <div class="flex items-center space-x-4 mb-4 md:mb-0">
-                    <i id="menu-toggle" data-lucide="menu" class="lg:hidden w-6 h-6 cursor-pointer"></i>
+                    <i id="menu-toggle" data-lucide="menu" class="block lg-hide w-6 h-6 cursor-pointer"></i>
                     <h1 class="text-xl font-semibold">Dashboard</h1>
                 </div>
                 <div class="flex items-center space-x-4">
@@ -223,11 +221,11 @@
 
                         <!-- Profile Dropdown Menu -->
                         <div id="profileDropdown" class="hidden absolute right-0 mt-2 w-48 bg-white rounded-lg shadow-lg border border-gray-200 z-50">
-                            <a href="#" class="flex items-center px-4 py-2 text-sm text-gray-700 hover:bg-gray-100 border-b border-gray-200">
+                            <a href="{% url 'profile' %}" class="flex items-center px-4 py-2 text-sm text-gray-700 hover:bg-gray-100 border-b border-gray-200">
                                 <i data-lucide="user" class="w-4 h-4 mr-2"></i>
                                 Profile
                             </a>
-                            <a href="#" class="flex items-center px-4 py-2 text-sm text-gray-700 hover:bg-gray-100 border-b border-gray-200">
+                            <a href="{% url 'settings' %}" class="flex items-center px-4 py-2 text-sm text-gray-700 hover:bg-gray-100 border-b border-gray-200">
                                 <i data-lucide="settings" class="w-4 h-4 mr-2"></i>
                                 Settings
                             </a>
@@ -290,27 +288,53 @@
             }
         });
         // Select the hamburger menu button and the sidebar
+        // Select elements
         const menuToggle = document.getElementById('menu-toggle');
         const sidebar = document.getElementById('sidebar');
         const content = document.getElementById('content');
 
-        // Add a click event listener to toggle the sidebar and adjust the content margin
-        menuToggle.addEventListener('click', () => {
-            sidebar.classList.toggle('hidden'); // Toggle the 'hidden' class on the sidebar
+        // Helper function to check if the screen is large
+        function isLargeScreen() {
+            return window.matchMedia('(min-width: 1024px)').matches;
+        }
 
-            // Toggle the left margin of the content section
-            content.classList.toggle('lg:ml-64');
-            content.classList.toggle('ml-0');
+        // Function to toggle the sidebar and adjust the content margin
+        function toggleSidebar() {
+            // Toggle the sidebar visibility
+            sidebar.classList.toggle('hidden');
+
+            // Adjust the content margin based on screen size
+            if (!isLargeScreen()) {
+                content.classList.toggle('ml-0');
+                console.log("here");
+                content.classList.toggle('ml-1'); // Match the sidebar width
+            }
+        }
+
+        // Add a click event listener to toggle the sidebar
+        menuToggle.addEventListener('click', () => {
+            toggleSidebar();
         });
 
-        // Optional: Close the sidebar and reset the content margin when clicking outside
+        // Close the sidebar when clicking outside of it
         document.addEventListener('click', (event) => {
             if (!sidebar.contains(event.target) && !menuToggle.contains(event.target)) {
-                sidebar.classList.add('hidden'); // Hide the sidebar
-                content.classList.add('ml-0'); // Reset the content margin
-                content.classList.remove('lg:ml-64');
+                // Hide the sidebar
+                sidebar.classList.add('hidden');
+
+                // Reset the content margin on small screens
+                if (!isLargeScreen()) {
+                    content.classList.add('ml-0');
+                    content.classList.remove('ml-1');
+                }
             }
-        })
+        });
+
+        if (isLargeScreen()) {
+            menuToggle.style.display = 'none'; // Hide the hamburger menu on large screens
+        } else {
+            menuToggle.style.display = 'block'; // Show the hamburger menu on small screens
+        }
     </script>
 </body>
 </html>
