@@ -163,7 +163,7 @@
 <body>
     <div class="flex h-screen bg-gray-100">
         <!-- Sidebar -->
-        <div id="sidebar" class="w-16 bg-black flex flex-col items-center py-6 space-y-8 lg:w-20 hover:w-48 transition-all duration-300 group">
+        <div id="sidebar" class="w-16 bg-black flex flex-col items-center py-6 space-y-8 lg:w-20 hover:w-48 transition-all duration-300 ease-in-out group">
             <!-- Logo or Icon -->
             <div class="text-white">
                 <i data-lucide="layout-grid" class="w-6 h-6"></i>
@@ -194,11 +194,11 @@
         </div>
 
         <!-- Main Content -->
-        <div class="flex-1 overflow-auto main-content">
+        <div id="content" class="flex-1 overflow-auto main-content transition-all duration-300 ease-in-out">
             <!-- Header -->
             <header class="bg-white p-4 flex flex-col md:flex-row items-center justify-between border-b">
                 <div class="flex items-center space-x-4 mb-4 md:mb-0">
-                    <!-- <i id="menuButton" data-lucide="menu" class="w-6 h-6 cursor-pointer"></i> -->
+                    <i id="menu-toggle" data-lucide="menu" class="lg:hidden w-6 h-6 cursor-pointer"></i>
                     <h1 class="text-xl font-semibold">Dashboard</h1>
                 </div>
                 <div class="flex items-center space-x-4">
@@ -241,7 +241,7 @@
             </header>
 
             <!-- Main Content Area -->
-            <main class="p-6 bg-gray-50">
+            <main class="p-6 bg-gray-50 content">
                 {% block content %}
                 
                 {% endblock %}
@@ -289,6 +289,28 @@
                 profileDropdown.classList.add('hidden');
             }
         });
+        // Select the hamburger menu button and the sidebar
+        const menuToggle = document.getElementById('menu-toggle');
+        const sidebar = document.getElementById('sidebar');
+        const content = document.getElementById('content');
+
+        // Add a click event listener to toggle the sidebar and adjust the content margin
+        menuToggle.addEventListener('click', () => {
+            sidebar.classList.toggle('hidden'); // Toggle the 'hidden' class on the sidebar
+
+            // Toggle the left margin of the content section
+            content.classList.toggle('lg:ml-64');
+            content.classList.toggle('ml-0');
+        });
+
+        // Optional: Close the sidebar and reset the content margin when clicking outside
+        document.addEventListener('click', (event) => {
+            if (!sidebar.contains(event.target) && !menuToggle.contains(event.target)) {
+                sidebar.classList.add('hidden'); // Hide the sidebar
+                content.classList.add('ml-0'); // Reset the content margin
+                content.classList.remove('lg:ml-64');
+            }
+        })
     </script>
 </body>
 </html>
