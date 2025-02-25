@@ -1,3 +1,4 @@
+{% load static %}
 <!DOCTYPE html>
 <html lang="en">
 <head>
@@ -7,152 +8,16 @@
     <script src="https://cdn.tailwindcss.com"></script>
     <script src="https://cdn.jsdelivr.net/npm/chart.js"></script>
     <script src="https://unpkg.com/lucide@latest"></script>
+    <link rel="stylesheet" href="{% static 'dashboard/css/dashboard.css' %}">
     {% block style %}
     {% endblock %}
-    <style>
-        /* Add these dark mode styles */
-        .dark body {
-            background-color: #1a1a1a;
-            color: #ffffff;
-        }
 
-        .dark .bg-white {
-            background-color: #000000;
-        }
-
-        .dark .text-gray-700 {
-            color: #e5e5e5;
-        }
-
-        .dark .text-gray-600 {
-            color: #d1d1d1;
-        }
-
-        .dark .text-gray-500 {
-            color: #a3a3a3;
-        }
-
-        .dark .text-gray-900 {
-            color: #ffffff;
-        }
-
-        .dark .border-gray-200 {
-            border-color: #404040;
-        }
-
-        .dark .hover\:bg-gray-100:hover {
-            background-color: #404040;
-        }
-
-        /* Add to your existing dark mode styles in the <style> section */
-        .dark .text-gray-800 {
-            color: #ffffff;
-        }
-
-        .dark .bg-gray-50 {
-            background-color: #1a1a1a;
-        }
-
-        .dark thead.bg-gray-50 {
-            background-color: #2d2d2d;
-        }
-
-        .dark .divide-gray-200 > * {
-            border-color: #404040;
-        }
-
-        /* Chart specific dark mode styles */
-        .dark canvas {
-            filter: invert(1) hue-rotate(180deg);
-        }
-        .dark .hover\:bg-gray-100:hover {
-            background-color: #404040;
-        }
-        .dark .bg-gray-50 {
-            background-color: #1a1a1a;
-        }
-
-        /* Base styles for the sidebar */
-        #sidebar {
-            width: 64px; /* Fixed width for collapsed state */
-            background-color: rgb(0, 0, 0);
-            flex-direction: column;
-            align-items: center;
-            padding-top: 1.5rem; /* Add vertical padding */
-            gap: 2rem; /* Space between items */
-            transition: width 0.3s ease-in-out; /* Smooth width transition */
-            position: fixed; /* Fix the sidebar in place */
-            top: 0; /* Stick to the top */
-            left: 0; /* Stick to the left */
-            height: 100vh; /* Full height */
-            z-index: 50; /* Ensure it appears above other elements */
-            overflow: hidden; /* Prevent content from overflowing */
-        }
-
-        /* Expanded state on hover */
-        #sidebar:hover {
-            width: 192px; /* Fixed width for expanded state */
-        }
-
-        /* Icon container */
-        #sidebar .text-white {
-            display: flex;
-            justify-content: center;
-            align-items: center;
-            width: 100%;
-        }
-
-        /* Navigation buttons */
-        #sidebar nav button {
-            display: flex;
-            align-items: center;
-            justify-content: flex-start;
-            width: 100%;
-            padding: 0.75rem; /* Ensure proper padding */
-            color: gray; /* Default icon color */
-            transition: color 0.3s ease-in-out; /* Smooth color transition */
-        }
-
-        /* Icons */
-        #sidebar nav button i {
-            width: 1.25rem; /* Fixed size for icons */
-            height: 1.25rem;
-            transition: transform 0.3s ease-in-out; /* Optional: Add subtle animation */
-        }
-
-        /* Text labels */
-        #sidebar nav button span {
-            margin-left: 0.75rem; /* Spacing between icon and text */
-            font-size: 0.875rem; /* Smaller font size */
-            opacity: 0; /* Hidden by default */
-            transition: opacity 0.3s ease-in-out; /* Smooth fade-in effect */
-            white-space: nowrap; /* Prevent text wrapping */
-        }
-
-        /* Hover effects */
-        #sidebar:hover nav button span {
-            opacity: 1; /* Show text on hover */
-        }
-
-        #sidebar nav button:hover {
-            color: white; /* Change icon color on hover */
-        }
-
-        /* Main content styling */
-        .main-content {
-            margin-left: 64px; /*Match the collapsed width of the sidebar
-            padding: 1rem; /* Add padding for spacing */
-            transition: none; /* No transition for content */
-            position: relative; /* Ensure content stays in place */
-            z-index: 10; /* Ensure content stays below the sidebar */
-        }
-    </style>
     {% block head_script %}
     {% endblock %}
     <script>
         tailwind.config = {
             darkMode: 'class',
-            // ... any other existing config
+            // for theme toggle
         }
     </script>
 </head>
@@ -167,10 +32,12 @@
             <!-- Navigation Buttons -->
             <nav class="flex flex-col space-y-6">
                 <!-- Refresh Button -->
-                <button class="p-2 text-gray-400 hover:text-white transition-colors flex items-center justify-center lg:justify-start">
-                    <i data-lucide="refresh-cw" class="w-5 h-5"></i>
-                    <span class="ml-2 text-sm opacity-0 group-hover:opacity-100 transition-opacity duration-300 hidden group-hover:block">Refresh</span>
-                </button>
+                <a href="{% url 'home' %}">
+                    <button class="p-2 text-gray-400 hover:text-white transition-colors flex items-center justify-center lg:justify-start">
+                        <i data-lucide="house" class="w-5 h-5"></i>
+                        <span class="ml-2 text-sm opacity-0 group-hover:opacity-100 transition-opacity duration-300 hidden group-hover:block">Home</span>
+                    </button>
+                </a>
                 <!-- Wallet Button -->
                 <button class="p-2 text-gray-400 hover:text-white transition-colors flex items-center justify-center lg:justify-start">
                     <i data-lucide="wallet" class="w-5 h-5"></i>
@@ -197,7 +64,9 @@
             <header class="bg-white p-4 flex flex-col md:flex-row items-center justify-between border-b">
                 <div class="flex items-center space-x-4 mb-4 md:mb-0">
                     <i id="menu-toggle" data-lucide="menu" class="block lg-hide w-6 h-6 cursor-pointer"></i>
-                    <h1 class="text-xl font-semibold">Dashboard</h1>
+                    <a href="{% url 'dashboard' %}">
+                        <h1 class="text-xl font-semibold">Dashboard</h1>
+                    </a>
                 </div>
                 <div class="flex items-center space-x-4">
                     <!-- Theme Toggle Switch -->
@@ -249,78 +118,6 @@
     {% block script %}
         
     {% endblock %}
-    <script>
-        // Initialize Lucide icons
-        lucide.createIcons();
-
-        // Theme toggle functionality
-        const themeToggle = document.getElementById('themeToggle');
-        
-        // Check for saved theme preference or default to light
-        if (localStorage.getItem('theme') === 'dark' || 
-            (!localStorage.getItem('theme') && window.matchMedia('(prefers-color-scheme: dark)').matches)) {
-            document.documentElement.classList.add('dark');
-        }
-
-        // Toggle theme
-        themeToggle.addEventListener('click', () => {
-            if (document.documentElement.classList.contains('dark')) {
-                document.documentElement.classList.remove('dark');
-                localStorage.setItem('theme', 'light');
-            } else {
-                document.documentElement.classList.add('dark');
-                localStorage.setItem('theme', 'dark');
-            }
-        });
-
-        // Profile dropdown functionality
-        const profileButton = document.getElementById('profileButton');
-        const profileDropdown = document.getElementById('profileDropdown');
-        
-        profileButton.addEventListener('click', (e) => {
-            e.stopPropagation();
-            profileDropdown.classList.toggle('hidden');
-        });
-        
-        document.addEventListener('click', (e) => {
-            if (!profileButton.contains(e.target)) {
-                profileDropdown.classList.add('hidden');
-            }
-        });
-        // Select the hamburger menu button and the sidebar
-        // Select elements
-        const menuToggle = document.getElementById('menu-toggle');
-        const sidebar = document.getElementById('sidebar');
-        const content = document.getElementById('content');
-
-        // Helper function to check if the screen is large
-        function isLargeScreen() {
-            return window.matchMedia('(min-width: 1024px)').matches;
-        }
-
-        // Function to toggle the sidebar and adjust the content margin
-        function toggleSidebar() {
-            // Toggle the sidebar visibility
-            sidebar.classList.toggle('hidden');
-
-            // Adjust the content margin based on screen size
-            if (!isLargeScreen()) {
-                content.classList.toggle('ml-0');
-                console.log("here");
-                content.classList.toggle('ml-1'); // Match the sidebar width
-            }
-        }
-
-        // Add a click event listener to toggle the sidebar
-        menuToggle.addEventListener('click', () => {
-            toggleSidebar();
-        });
-
-        if (isLargeScreen()) {
-            menuToggle.style.display = 'none'; // Hide the hamburger menu on large screens
-        } else {
-            menuToggle.style.display = 'block'; // Show the hamburger menu on small screens
-        }
-    </script>
+    <script src="{% static 'dashboard/js/dashboard.js' %}"></script>
 </body>
 </html>
