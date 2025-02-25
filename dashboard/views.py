@@ -13,3 +13,7 @@ def profile(request):
 
 def settings(request):
     return render(request, 'dashboard/settings.html')
+
+
+def invoice(request):
+    return render(request, 'dashboard/invoice.html')

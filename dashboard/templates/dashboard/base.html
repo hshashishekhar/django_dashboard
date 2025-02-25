@@ -38,16 +38,13 @@
                         <span class="ml-2 text-sm opacity-0 group-hover:opacity-100 transition-opacity duration-300 hidden group-hover:block">Home</span>
                     </button>
                 </a>
-                <!-- Wallet Button -->
-                <button class="p-2 text-gray-400 hover:text-white transition-colors flex items-center justify-center lg:justify-start">
-                    <i data-lucide="wallet" class="w-5 h-5"></i>
-                    <span class="ml-2 text-sm opacity-0 group-hover:opacity-100 transition-opacity duration-300 hidden group-hover:block">Wallet</span>
-                </button>
                 <!-- File Text Button -->
-                <button class="p-2 text-gray-400 hover:text-white transition-colors flex items-center justify-center lg:justify-start">
-                    <i data-lucide="file-text" class="w-5 h-5"></i>
-                    <span class="ml-2 text-sm opacity-0 group-hover:opacity-100 transition-opacity duration-300 hidden group-hover:block">Documents</span>
-                </button>
+                <a href="{% url 'invoice' %}">
+                    <button class="p-2 text-gray-400 hover:text-white transition-colors flex items-center justify-center lg:justify-start">
+                        <i data-lucide="file-text" class="w-5 h-5"></i>
+                        <span class="ml-2 text-sm opacity-0 group-hover:opacity-100 transition-opacity duration-300 hidden group-hover:block">Invoice</span>
+                    </button>
+                </a>
                 <!-- Settings Button -->
                 <a href="{% url 'settings' %}">
                     <button class="p-2 text-gray-400 hover:text-white transition-colors flex items-center justify-center lg:justify-start">
