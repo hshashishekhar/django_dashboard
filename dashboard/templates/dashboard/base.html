@@ -40,25 +40,22 @@
                 </a>
                 <!-- CRM Button -->
                 <a href="{% url 'crm' %}">
-                    <!-- CRM Button with Dropdown -->
                     <div class="relative">
                         <button id="crmButton" class="p-2 text-gray-400 hover:text-white transition-colors flex items-center justify-center lg:justify-start">
                             <i data-lucide="users" class="w-5 h-5"></i>
                             <span class="ml-2 text-sm opacity-0 group-hover:opacity-100 transition-opacity duration-300 hidden group-hover:block">CRM</span>
                             <i data-lucide="chevron-down" class="w-4 h-4 ml-1 opacity-0 group-hover:opacity-100 transition-opacity duration-300 hidden group-hover:block cursor-pointer"></i>
                         </button>
-                        <div id="crmDropdown" class="hidden absolute left-full ml-2 top-0 w-48 bg-white rounded-lg shadow-lg border border-gray-200 z-50">
-                            <a href="{% url 'crm' %}" class="flex items-center px-4 py-2 text-sm text-gray-700 hover:bg-gray-100 border-b border-gray-200">
+                        <div id="crmDropdown" class="hidden absolute left-[calc(100%+0.5rem)] top-1/2 -translate-y-1/2 w-48 bg-black rounded-lg shadow-lg border border-gray-700 z-[100]">
+                            <a href="{% url 'crm' %}" class="group/tooltip relative flex items-center px-4 py-2 text-sm text-gray-300 hover:bg-gray-900 hover:text-white border-b border-gray-700">
+                                <span class="invisible group-hover/tooltip:visible absolute right-full mr-2 px-2 py-1 bg-gray-900 text-xs text-white rounded whitespace-nowrap">CRM Dashboard</span>
                                 <i data-lucide="layout-grid" class="w-4 h-4 mr-2"></i>
                                 Dashboard
                             </a>
-                            <a href="{% url 'kanban' %}" class="flex items-center px-4 py-2 text-sm text-gray-700 hover:bg-gray-100 border-b border-gray-200">
+                            <a href="{% url 'kanban' %}" class="group/tooltip relative flex items-center px-4 py-2 text-sm text-gray-300 hover:bg-gray-900 hover:text-white border-b border-gray-700">
+                                <span class="invisible group-hover/tooltip:visible absolute right-full mr-2 px-2 py-1 bg-gray-900 text-xs text-white rounded whitespace-nowrap">Customer Pipeline</span>
                                 <i data-lucide="trello" class="w-4 h-4 mr-2"></i>
                                 Kanban Board
-                            </a>
-                            <a href="#" class="flex items-center px-4 py-2 text-sm text-gray-700 hover:bg-gray-100">
-                                <i data-lucide="list" class="w-4 h-4 mr-2"></i>
-                                Customer List
                             </a>
                         </div>
                     </div>

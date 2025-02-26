@@ -70,11 +70,11 @@ if (isLargeScreen()) {
     menuToggle.style.display = 'block'; // Show the hamburger menu on small screens
 }
 
-// Add this to your existing JavaScript
+// CRM Dropdown
 document.addEventListener('DOMContentLoaded', function() {
     const crmButton = document.getElementById('crmButton');
     const crmDropdown = document.getElementById('crmDropdown');
-
+    let dropdownTimer;
     // Toggle dropdown on chevron click
     crmButton.querySelector('[data-lucide="chevron-down"]').addEventListener('click', function(e) {
         e.preventDefault();
@@ -87,5 +87,28 @@ document.addEventListener('DOMContentLoaded', function() {
         if (!crmButton.contains(e.target) && !crmDropdown.contains(e.target)) {
             crmDropdown.classList.add('hidden');
         }
+    });
+    crmButton.addEventListener('click', function(e) {
+        e.preventDefault();
+        crmDropdown.classList.toggle('hidden');
+        
+        // Clear existing timer if any
+        if (dropdownTimer) clearTimeout(dropdownTimer);
+        
+        // Set new timer
+        dropdownTimer = setTimeout(() => {
+            crmDropdown.classList.add('hidden');
+        }, 5000);
+    });
+
+    // Reset timer when user interacts with dropdown
+    crmDropdown.addEventListener('mouseenter', () => {
+        if (dropdownTimer) clearTimeout(dropdownTimer);
+    });
+
+    crmDropdown.addEventListener('mouseleave', () => {
+        dropdownTimer = setTimeout(() => {
+            crmDropdown.classList.add('hidden');
+        }, 3000);
     });
 });
