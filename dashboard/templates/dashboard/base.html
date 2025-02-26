@@ -31,11 +31,18 @@
             </div>
             <!-- Navigation Buttons -->
             <nav class="flex flex-col space-y-6">
-                <!-- Refresh Button -->
+                <!-- Home Button -->
                 <a href="{% url 'home' %}">
                     <button class="p-2 text-gray-400 hover:text-white transition-colors flex items-center justify-center lg:justify-start">
                         <i data-lucide="house" class="w-5 h-5"></i>
                         <span class="ml-2 text-sm opacity-0 group-hover:opacity-100 transition-opacity duration-300 hidden group-hover:block">Home</span>
+                    </button>
+                </a>
+                <!-- CRM Button -->
+                <a href="{% url 'crm' %}">
+                    <button class="p-2 text-gray-400 hover:text-white transition-colors flex items-center justify-center lg:justify-start">
+                        <i data-lucide="users" class="w-5 h-5"></i>
+                        <span class="ml-2 text-sm opacity-0 group-hover:opacity-100 transition-opacity duration-300 hidden group-hover:block">CRM</span>
                     </button>
                 </a>
                 <!-- File Text Button -->
