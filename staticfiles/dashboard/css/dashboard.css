@@ -1,0 +1,136 @@
+/* Add these dark mode styles */
+.dark body {
+    background-color: #1a1a1a;
+    color: #ffffff;
+}
+
+.dark .bg-white {
+    background-color: #000000;
+}
+
+.dark .text-gray-700 {
+    color: #e5e5e5;
+}
+
+.dark .text-gray-600 {
+    color: #d1d1d1;
+}
+
+.dark .text-gray-500 {
+    color: #a3a3a3;
+}
+
+.dark .text-gray-900 {
+    color: #ffffff;
+}
+
+.dark .border-gray-200 {
+    border-color: #404040;
+}
+
+.dark .hover\:bg-gray-100:hover {
+    background-color: #404040;
+}
+
+/* Add to your existing dark mode styles in the <style> section */
+.dark .text-gray-800 {
+    color: #ffffff;
+}
+
+.dark .bg-gray-50 {
+    background-color: #1a1a1a;
+}
+
+.dark thead.bg-gray-50 {
+    background-color: #2d2d2d;
+}
+
+.dark .divide-gray-200 > * {
+    border-color: #404040;
+}
+
+/* Chart specific dark mode styles */
+.dark canvas {
+    filter: invert(1) hue-rotate(180deg);
+}
+.dark .hover\:bg-gray-100:hover {
+    background-color: #404040;
+}
+.dark .bg-gray-50 {
+    background-color: #1a1a1a;
+}
+
+/* Base styles for the sidebar */
+#sidebar {
+    width: 64px; /* Fixed width for collapsed state */
+    background-color: rgb(0, 0, 0);
+    flex-direction: column;
+    align-items: center;
+    padding-top: 1.5rem; /* Add vertical padding */
+    gap: 2rem; /* Space between items */
+    transition: width 0.3s ease-in-out; /* Smooth width transition */
+    position: fixed; /* Fix the sidebar in place */
+    top: 0; /* Stick to the top */
+    left: 0; /* Stick to the left */
+    height: 100vh; /* Full height */
+    z-index: 50; /* Ensure it appears above other elements */
+    overflow: hidden; /* Prevent content from overflowing */
+}
+
+/* Expanded state on hover */
+#sidebar:hover {
+    width: 192px; /* Fixed width for expanded state */
+}
+
+/* Icon container */
+#sidebar .text-white {
+    display: flex;
+    justify-content: center;
+    align-items: center;
+    width: 100%;
+}
+
+/* Navigation buttons */
+#sidebar nav button {
+    display: flex;
+    align-items: center;
+    justify-content: flex-start;
+    width: 100%;
+    padding: 0.75rem; /* Ensure proper padding */
+    color: gray; /* Default icon color */
+    transition: color 0.3s ease-in-out; /* Smooth color transition */
+}
+
+/* Icons */
+#sidebar nav button i {
+    width: 1.25rem; /* Fixed size for icons */
+    height: 1.25rem;
+    transition: transform 0.3s ease-in-out; /* Optional: Add subtle animation */
+}
+
+/* Text labels */
+#sidebar nav button span {
+    margin-left: 0.75rem; /* Spacing between icon and text */
+    font-size: 0.875rem; /* Smaller font size */
+    opacity: 0; /* Hidden by default */
+    transition: opacity 0.3s ease-in-out; /* Smooth fade-in effect */
+    white-space: nowrap; /* Prevent text wrapping */
+}
+
+/* Hover effects */
+#sidebar:hover nav button span {
+    opacity: 1; /* Show text on hover */
+}
+
+#sidebar nav button:hover {
+    color: white; /* Change icon color on hover */
+}
+
+/* Main content styling */
+.main-content {
+    margin-left: 64px; /*Match the collapsed width of the sidebar
+    padding: 1rem; /* Add padding for spacing */
+    transition: none; /* No transition for content */
+    position: relative; /* Ensure content stays in place */
+    z-index: 10; /* Ensure content stays below the sidebar */
+}
