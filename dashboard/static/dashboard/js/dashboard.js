@@ -69,3 +69,23 @@ if (isLargeScreen()) {
 } else {
     menuToggle.style.display = 'block'; // Show the hamburger menu on small screens
 }
+
+// Add this to your existing JavaScript
+document.addEventListener('DOMContentLoaded', function() {
+    const crmButton = document.getElementById('crmButton');
+    const crmDropdown = document.getElementById('crmDropdown');
+
+    // Toggle dropdown on chevron click
+    crmButton.querySelector('[data-lucide="chevron-down"]').addEventListener('click', function(e) {
+        e.preventDefault();
+        e.stopPropagation();
+        crmDropdown.classList.toggle('hidden');
+    });
+
+    // Close dropdown when clicking outside
+    document.addEventListener('click', function(e) {
+        if (!crmButton.contains(e.target) && !crmDropdown.contains(e.target)) {
+            crmDropdown.classList.add('hidden');
+        }
+    });
+});

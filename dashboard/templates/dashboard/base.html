@@ -40,10 +40,28 @@
                 </a>
                 <!-- CRM Button -->
                 <a href="{% url 'crm' %}">
-                    <button class="p-2 text-gray-400 hover:text-white transition-colors flex items-center justify-center lg:justify-start">
-                        <i data-lucide="users" class="w-5 h-5"></i>
-                        <span class="ml-2 text-sm opacity-0 group-hover:opacity-100 transition-opacity duration-300 hidden group-hover:block">CRM</span>
-                    </button>
+                    <!-- CRM Button with Dropdown -->
+                    <div class="relative">
+                        <button id="crmButton" class="p-2 text-gray-400 hover:text-white transition-colors flex items-center justify-center lg:justify-start">
+                            <i data-lucide="users" class="w-5 h-5"></i>
+                            <span class="ml-2 text-sm opacity-0 group-hover:opacity-100 transition-opacity duration-300 hidden group-hover:block">CRM</span>
+                            <i data-lucide="chevron-down" class="w-4 h-4 ml-1 opacity-0 group-hover:opacity-100 transition-opacity duration-300 hidden group-hover:block cursor-pointer"></i>
+                        </button>
+                        <div id="crmDropdown" class="hidden absolute left-full ml-2 top-0 w-48 bg-white rounded-lg shadow-lg border border-gray-200 z-50">
+                            <a href="{% url 'crm' %}" class="flex items-center px-4 py-2 text-sm text-gray-700 hover:bg-gray-100 border-b border-gray-200">
+                                <i data-lucide="layout-grid" class="w-4 h-4 mr-2"></i>
+                                Dashboard
+                            </a>
+                            <a href="{% url 'kanban' %}" class="flex items-center px-4 py-2 text-sm text-gray-700 hover:bg-gray-100 border-b border-gray-200">
+                                <i data-lucide="trello" class="w-4 h-4 mr-2"></i>
+                                Kanban Board
+                            </a>
+                            <a href="#" class="flex items-center px-4 py-2 text-sm text-gray-700 hover:bg-gray-100">
+                                <i data-lucide="list" class="w-4 h-4 mr-2"></i>
+                                Customer List
+                            </a>
+                        </div>
+                    </div>
                 </a>
                 <!-- File Text Button -->
                 <a href="{% url 'invoice' %}">
