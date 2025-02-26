@@ -1,0 +1,484 @@
+{% extends 'dashboard/base.html' %}
+
+{% block content %}
+    <!-- Statistics Cards -->
+    <div class="grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-4 gap-6 mb-8">
+        <!-- Total Customers Card -->
+        <div class="bg-white rounded-lg p-6 shadow-sm hover:shadow-md transition-shadow">
+            <div class="flex items-center justify-between mb-4">
+                <div>
+                    <h3 class="text-lg font-semibold text-gray-700">Total Customers</h3>
+                    <p class="text-3xl font-bold text-gray-900">2,420</p>
+                </div>
+                <div class="p-3 rounded-full bg-indigo-100">
+                    <i data-lucide="users" class="w-6 h-6 text-indigo-600"></i>
+                </div>
+            </div>
+            <div class="flex items-center text-sm">
+                <span class="text-green-500 flex items-center">
+                    <i data-lucide="trending-up" class="w-4 h-4 mr-1"></i> 12%
+                </span>
+                <span class="text-gray-500 ml-2">from last month</span>
+            </div>
+        </div>
+
+        <!-- Active Customers Card -->
+        <div class="bg-white rounded-lg p-6 shadow-sm hover:shadow-md transition-shadow">
+            <div class="flex items-center justify-between mb-4">
+                <div>
+                    <h3 class="text-lg font-semibold text-gray-700">Active Customers</h3>
+                    <p class="text-3xl font-bold text-gray-900">1,850</p>
+                </div>
+                <div class="p-3 rounded-full bg-green-100">
+                    <i data-lucide="user-check" class="w-6 h-6 text-green-600"></i>
+                </div>
+            </div>
+            <div class="flex items-center text-sm">
+                <span class="text-green-500 flex items-center">
+                    <i data-lucide="trending-up" class="w-4 h-4 mr-1"></i> 8%
+                </span>
+                <span class="text-gray-500 ml-2">from last month</span>
+            </div>
+        </div>
+
+        <!-- Revenue Card -->
+        <div class="bg-white rounded-lg p-6 shadow-sm hover:shadow-md transition-shadow">
+            <div class="flex items-center justify-between mb-4">
+                <div>
+                    <h3 class="text-lg font-semibold text-gray-700">Total Revenue</h3>
+                    <p class="text-3xl font-bold text-gray-900">$32,450</p>
+                </div>
+                <div class="p-3 rounded-full bg-blue-100">
+                    <i data-lucide="dollar-sign" class="w-6 h-6 text-blue-600"></i>
+                </div>
+            </div>
+            <div class="flex items-center text-sm">
+                <span class="text-red-500 flex items-center">
+                    <i data-lucide="trending-down" class="w-4 h-4 mr-1"></i> 3%
+                </span>
+                <span class="text-gray-500 ml-2">from last month</span>
+            </div>
+        </div>
+
+        <!-- Growth Card -->
+        <div class="bg-white rounded-lg p-6 shadow-sm hover:shadow-md transition-shadow">
+            <div class="flex items-center justify-between mb-4">
+                <div>
+                    <h3 class="text-lg font-semibold text-gray-700">Growth Rate</h3>
+                    <p class="text-3xl font-bold text-gray-900">+15.2%</p>
+                </div>
+                <div class="p-3 rounded-full bg-purple-100">
+                    <i data-lucide="trending-up" class="w-6 h-6 text-purple-600"></i>
+                </div>
+            </div>
+            <div class="flex items-center text-sm">
+                <span class="text-green-500 flex items-center">
+                    <i data-lucide="trending-up" class="w-4 h-4 mr-1"></i> 5%
+                </span>
+                <span class="text-gray-500 ml-2">from last month</span>
+            </div>
+        </div>
+    </div>
+    
+    <!-- After statistics cards and before customer list -->
+    <div class="grid grid-cols-1 lg:grid-cols-2 gap-6 mb-8">
+        <!-- Revenue Trend Chart -->
+        <div class="bg-white rounded-lg shadow-sm p-6">
+            <div class="flex justify-between items-center mb-4">
+                <h3 class="text-lg font-semibold text-gray-700">Revenue Trend</h3>
+                <div class="flex space-x-2">
+                    <button class="px-3 py-1 text-sm bg-gray-900 text-white rounded" onclick="updateRevenueChart('monthly')">Monthly</button>
+                    <button class="px-3 py-1 text-sm text-gray-600 hover:bg-gray-100 rounded" onclick="updateRevenueChart('weekly')">Weekly</button>
+                    <button class="px-3 py-1 text-sm text-gray-600 hover:bg-gray-100 rounded" onclick="updateRevenueChart('daily')">Daily</button>
+                </div>
+            </div>
+            <div class="h-80">
+                <canvas id="revenueChart"></canvas>
+            </div>
+        </div>
+
+        <!-- Customer Growth Chart -->
+        <div class="bg-white rounded-lg shadow-sm p-6">
+            <div class="flex justify-between items-center mb-4">
+                <h3 class="text-lg font-semibold text-gray-700">Customer Growth</h3>
+                <div class="flex space-x-2">
+                    <button class="px-3 py-1 text-sm bg-gray-900 text-white rounded" onclick="updateCustomerChart('monthly')">Monthly</button>
+                    <button class="px-3 py-1 text-sm text-gray-600 hover:bg-gray-100 rounded" onclick="updateCustomerChart('weekly')">Weekly</button>
+                </div>
+            </div>
+            <div class="h-80">
+                <canvas id="customerChart"></canvas>
+            </div>
+        </div>
+    </div>
+
+    <!-- Main Content Grid -->
+    <div class="grid grid-cols-1 lg:grid-cols-3 gap-8">
+        <!-- Customer List -->
+        <div class="lg:col-span-2">
+            <div class="bg-white rounded-lg shadow-sm">
+                <div class="p-6 border-b border-gray-100">
+                    <div class="flex justify-between items-center">
+                        <h2 class="text-xl font-semibold text-gray-800">Customers</h2>
+                        <button class="px-4 py-2 bg-indigo-600 text-white rounded-lg hover:bg-indigo-700 flex items-center">
+                            <i data-lucide="plus" class="w-4 h-4 mr-2"></i>
+                            Add Customer
+                        </button>
+                    </div>
+                </div>
+                <div class="overflow-x-auto">
+                    <table class="w-full">
+                        <thead class="bg-gray-50">
+                            <tr>
+                                <th class="px-6 py-3 text-left text-xs font-medium text-gray-500 uppercase tracking-wider">Customer</th>
+                                <th class="px-6 py-3 text-left text-xs font-medium text-gray-500 uppercase tracking-wider">Status</th>
+                                <th class="px-6 py-3 text-left text-xs font-medium text-gray-500 uppercase tracking-wider">Revenue</th>
+                                <th class="px-6 py-3 text-left text-xs font-medium text-gray-500 uppercase tracking-wider">Last Contact</th>
+                                <th class="px-6 py-3 text-right text-xs font-medium text-gray-500 uppercase tracking-wider">Actions</th>
+                            </tr>
+                        </thead>
+                        <tbody class="bg-white divide-y divide-gray-200">
+                            <!-- Customer Row 1 -->
+                            <tr class="hover:bg-gray-50">
+                                <td class="px-6 py-4 whitespace-nowrap">
+                                    <div class="flex items-center">
+                                        <div class="h-10 w-10 flex-shrink-0">
+                                            <img class="h-10 w-10 rounded-full" src="https://ui-avatars.com/api/?name=John+Doe&background=6366f1&color=fff" alt="">
+                                        </div>
+                                        <div class="ml-4">
+                                            <div class="text-sm font-medium text-gray-900">John Doe</div>
+                                            <div class="text-sm text-gray-500">john@example.com</div>
+                                        </div>
+                                    </div>
+                                </td>
+                                <td class="px-6 py-4 whitespace-nowrap">
+                                    <span class="px-2 inline-flex text-xs leading-5 font-semibold rounded-full bg-green-100 text-green-800">Active</span>
+                                </td>
+                                <td class="px-6 py-4 whitespace-nowrap text-sm text-gray-900">$12,450</td>
+                                <td class="px-6 py-4 whitespace-nowrap text-sm text-gray-500">2 days ago</td>
+                                <td class="px-6 py-4 whitespace-nowrap text-right text-sm font-medium">
+                                    <button class="text-indigo-600 hover:text-indigo-900 mr-3">Edit</button>
+                                    <button class="text-red-600 hover:text-red-900">Delete</button>
+                                </td>
+                            </tr>
+                            <!-- More customer rows... -->
+                            <tr class="hover:bg-gray-50">
+                                <td class="px-6 py-4 whitespace-nowrap">
+                                    <div class="flex items-center">
+                                        <div class="h-10 w-10 flex-shrink-0">
+                                            <img class="h-10 w-10 rounded-full" src="https://ui-avatars.com/api/?name=Sarah+Smith&background=14b8a6&color=fff" alt="">
+                                        </div>
+                                        <div class="ml-4">
+                                            <div class="text-sm font-medium text-gray-900">Sarah Smith</div>
+                                            <div class="text-sm text-gray-500">sarah@example.com</div>
+                                        </div>
+                                    </div>
+                                </td>
+                                <td class="px-6 py-4 whitespace-nowrap">
+                                    <span class="px-2 inline-flex text-xs leading-5 font-semibold rounded-full bg-yellow-100 text-yellow-800">Pending</span>
+                                </td>
+                                <td class="px-6 py-4 whitespace-nowrap text-sm text-gray-900">$8,230</td>
+                                <td class="px-6 py-4 whitespace-nowrap text-sm text-gray-500">5 days ago</td>
+                                <td class="px-6 py-4 whitespace-nowrap text-right text-sm font-medium">
+                                    <button class="text-indigo-600 hover:text-indigo-900 mr-3">Edit</button>
+                                    <button class="text-red-600 hover:text-red-900">Delete</button>
+                                </td>
+                            </tr>
+                            <tr class="hover:bg-gray-50">
+                                <td class="px-6 py-4 whitespace-nowrap">
+                                    <div class="flex items-center">
+                                        <div class="h-10 w-10 flex-shrink-0">
+                                            <img class="h-10 w-10 rounded-full" src="https://ui-avatars.com/api/?name=Mike+Johnson&background=f59e0b&color=fff" alt="">
+                                        </div>
+                                        <div class="ml-4">
+                                            <div class="text-sm font-medium text-gray-900">Mike Johnson</div>
+                                            <div class="text-sm text-gray-500">mike@example.com</div>
+                                        </div>
+                                    </div>
+                                </td>
+                                <td class="px-6 py-4 whitespace-nowrap">
+                                    <span class="px-2 inline-flex text-xs leading-5 font-semibold rounded-full bg-red-100 text-red-800">Inactive</span>
+                                </td>
+                                <td class="px-6 py-4 whitespace-nowrap text-sm text-gray-900">$5,890</td>
+                                <td class="px-6 py-4 whitespace-nowrap text-sm text-gray-500">1 week ago</td>
+                                <td class="px-6 py-4 whitespace-nowrap text-right text-sm font-medium">
+                                    <button class="text-indigo-600 hover:text-indigo-900 mr-3">Edit</button>
+                                    <button class="text-red-600 hover:text-red-900">Delete</button>
+                                </td>
+                            </tr>
+                        </tbody>
+                    </table>
+                </div>
+            </div>
+        </div>
+
+        <!-- Recent Activities -->
+        <div class="lg:col-span-1">
+            <div class="bg-white rounded-lg shadow-sm">
+                <div class="p-6 border-b border-gray-100">
+                    <h2 class="text-xl font-semibold text-gray-800">Recent Activities</h2>
+                </div>
+                <div class="p-6">
+                    <div class="flow-root">
+                        <ul class="-mb-8">
+                            
+                            <li>
+                                <div class="relative pb-8">
+                                    <span class="absolute top-4 left-4 -ml-px h-full w-0.5 bg-gray-200" aria-hidden="true"></span>
+                                    <div class="relative flex space-x-3">
+                                        <div>
+                                            <span class="h-8 w-8 rounded-full bg-green-500 flex items-center justify-center ring-8 ring-white">
+                                                <i data-lucide="dollar-sign" class="w-4 h-4 text-white"></i>
+                                            </span>
+                                        </div>
+                                        <div class="min-w-0 flex-1 pt-1.5 flex justify-between space-x-4">
+                                            <div>
+                                                <p class="text-sm text-gray-500">Payment received from <span class="font-medium text-gray-900">Sarah Smith</span></p>
+                                            </div>
+                                            <div class="text-right text-sm whitespace-nowrap text-gray-500">
+                                                <time datetime="2023-09-20">5h ago</time>
+                                            </div>
+                                        </div>
+                                    </div>
+                                </div>
+                            </li>
+                            <li>
+                                <div class="relative pb-8">
+                                    <span class="absolute top-4 left-4 -ml-px h-full w-0.5 bg-gray-200" aria-hidden="true"></span>
+                                    <div class="relative flex space-x-3">
+                                        <div>
+                                            <span class="h-8 w-8 rounded-full bg-yellow-500 flex items-center justify-center ring-8 ring-white">
+                                                <i data-lucide="mail" class="w-4 h-4 text-white"></i>
+                                            </span>
+                                        </div>
+                                        <div class="min-w-0 flex-1 pt-1.5 flex justify-between space-x-4">
+                                            <div>
+                                                <p class="text-sm text-gray-500">New message from <span class="font-medium text-gray-900">Mike Johnson</span></p>
+                                            </div>
+                                            <div class="text-right text-sm whitespace-nowrap text-gray-500">
+                                                <time datetime="2023-09-20">1d ago</time>
+                                            </div>
+                                        </div>
+                                    </div>
+                                </div>
+                            </li>
+                            <li>
+                                <div class="relative pb-8">
+                                    <div class="relative flex space-x-3">
+                                        <div>
+                                            <span class="h-8 w-8 rounded-full bg-red-500 flex items-center justify-center ring-8 ring-white">
+                                                <i data-lucide="alert-circle" class="w-4 h-4 text-white"></i>
+                                            </span>
+                                        </div>
+                                        <div class="min-w-0 flex-1 pt-1.5 flex justify-between space-x-4">
+                                            <div>
+                                                <p class="text-sm text-gray-500">Customer status changed to <span class="font-medium text-red-600">Inactive</span></p>
+                                            </div>
+                                            <div class="text-right text-sm whitespace-nowrap text-gray-500">
+                                                <time datetime="2023-09-20">2d ago</time>
+                                            </div>
+                                        </div>
+                                    </div>
+                                </div>
+                            </li>
+                        </ul>
+                    </div>
+                </div>
+            </div>
+        </div>
+    </div>
+{% endblock %}
+
+
+
+<!-- Add this script at the end of the content block -->
+{% block script %}
+<script>
+    // Chart data
+    const chartData = {
+        revenue: {
+            monthly: {
+                labels: ['Jan', 'Feb', 'Mar', 'Apr', 'May', 'Jun'],
+                data: [12450, 14500, 18200, 16800, 21500, 32450]
+            },
+            weekly: {
+                labels: ['Week 1', 'Week 2', 'Week 3', 'Week 4'],
+                data: [8200, 9400, 11300, 12450]
+            },
+            daily: {
+                labels: ['Mon', 'Tue', 'Wed', 'Thu', 'Fri'],
+                data: [2100, 1900, 2300, 2800, 2600]
+            }
+        },
+        customers: {
+            monthly: {
+                labels: ['Jan', 'Feb', 'Mar', 'Apr', 'May', 'Jun'],
+                active: [1200, 1350, 1500, 1650, 1800, 1850],
+                total: [1500, 1700, 1900, 2100, 2250, 2420]
+            },
+            weekly: {
+                labels: ['Week 1', 'Week 2', 'Week 3', 'Week 4'],
+                active: [1750, 1790, 1820, 1850],
+                total: [2350, 2380, 2400, 2420]
+            }
+        }
+    };
+
+    // Initialize charts
+    let revenueChart, customerChart;
+
+    function initializeCharts() {
+        const chartConfig = {
+            responsive: true,
+            maintainAspectRatio: false,
+            interaction: {
+                mode: 'index',
+                intersect: false,
+            },
+            plugins: {
+                legend: {
+                    position: 'top',
+                    labels: {
+                        boxWidth: 10,
+                        usePointStyle: true,
+                        padding: 20
+                    }
+                },
+                tooltip: {
+                    backgroundColor: 'rgba(17, 24, 39, 0.8)',
+                    padding: 12,
+                    bodySpacing: 4,
+                    bodyFont: {
+                        size: 12
+                    },
+                    usePointStyle: true,
+                    boxWidth: 10
+                }
+            },
+            scales: {
+                x: {
+                    grid: {
+                        display: false
+                    },
+                    ticks: {
+                        maxRotation: 45,
+                        minRotation: 45
+                    }
+                },
+                y: {
+                    beginAtZero: true,
+                    grid: {
+                        color: 'rgba(0, 0, 0, 0.05)'
+                    }
+                }
+            }
+        };
+
+        // Revenue Chart
+        const revenueCtx = document.getElementById('revenueChart').getContext('2d');
+        revenueChart = new Chart(revenueCtx, {
+            type: 'line',
+            data: {
+                labels: chartData.revenue.monthly.labels,
+                datasets: [{
+                    label: 'Revenue',
+                    data: chartData.revenue.monthly.data,
+                    borderColor: '#6366f1',
+                    backgroundColor: 'rgba(99, 102, 241, 0.1)',
+                    tension: 0.4,
+                    fill: true,
+                    pointBackgroundColor: '#6366f1',
+                    pointBorderColor: '#fff',
+                    pointBorderWidth: 2,
+                    pointRadius: 4,
+                    pointHoverRadius: 6
+                }]
+            },
+            options: {
+                ...chartConfig,
+                scales: {
+                    ...chartConfig.scales,
+                    y: {
+                        ...chartConfig.scales.y,
+                        ticks: {
+                            callback: value => '$' + value.toLocaleString()
+                        }
+                    }
+                }
+            }
+        });
+
+        // Customer Growth Chart
+        const customerCtx = document.getElementById('customerChart').getContext('2d');
+        customerChart = new Chart(customerCtx, {
+            type: 'bar',
+            data: {
+                labels: chartData.customers.monthly.labels,
+                datasets: [
+                    {
+                        label: 'Total Customers',
+                        data: chartData.customers.monthly.total,
+                        backgroundColor: 'rgba(99, 102, 241, 0.8)',
+                        borderRadius: 4,
+                        barThickness: 'flex'
+                    },
+                    {
+                        label: 'Active Customers',
+                        data: chartData.customers.monthly.active,
+                        backgroundColor: 'rgba(16, 185, 129, 0.8)',
+                        borderRadius: 4,
+                        barThickness: 'flex'
+                    }
+                ]
+            },
+            options: chartConfig
+        });
+    }
+
+    // Update Revenue Chart
+    function updateRevenueChart(period) {
+        revenueChart.data.labels = chartData.revenue[period].labels;
+        revenueChart.data.datasets[0].data = chartData.revenue[period].data;
+        revenueChart.update();
+
+        // Update button styles
+        const buttons = document.querySelectorAll('[onclick^="updateRevenueChart"]');
+        buttons.forEach(btn => {
+            if (btn.getAttribute('onclick').includes(period)) {
+                btn.classList.add('bg-gray-900', 'text-white');
+                btn.classList.remove('text-gray-600', 'hover:bg-gray-100');
+            } else {
+                btn.classList.remove('bg-gray-900', 'text-white');
+                btn.classList.add('text-gray-600', 'hover:bg-gray-100');
+            }
+        });
+    }
+
+    // Update Customer Chart
+    function updateCustomerChart(period) {
+        customerChart.data.labels = chartData.customers[period].labels;
+        customerChart.data.datasets[0].data = chartData.customers[period].total;
+        customerChart.data.datasets[1].data = chartData.customers[period].active;
+        customerChart.update();
+
+        // Update button styles
+        const buttons = document.querySelectorAll('[onclick^="updateCustomerChart"]');
+        buttons.forEach(btn => {
+            if (btn.getAttribute('onclick').includes(period)) {
+                btn.classList.add('bg-gray-900', 'text-white');
+                btn.classList.remove('text-gray-600', 'hover:bg-gray-100');
+            } else {
+                btn.classList.remove('bg-gray-900', 'text-white');
+                btn.classList.add('text-gray-600', 'hover:bg-gray-100');
+            }
+        });
+    }
+
+    // Initialize charts when the page loads
+    document.addEventListener('DOMContentLoaded', initializeCharts);
+</script>
+{% endblock %}
+
+
+
+

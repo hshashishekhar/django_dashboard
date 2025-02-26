@@ -1,0 +1,178 @@
+{% extends 'dashboard/base.html' %}
+
+{% block head_script %}
+<script src="https://cdn.jsdelivr.net/npm/sortablejs@1.15.0/Sortable.min.js"></script>
+{% endblock %}
+
+{% block content %}
+<div class="p-6">
+    <!-- Kanban Header -->
+    <!-- Update the button in the header -->
+    <div class="flex flex-col sm:flex-row justify-between items-start sm:items-center mb-6">
+        <h1 class="text-2xl font-bold text-gray-900 mb-4 sm:mb-0">Customer Pipeline</h1>
+        <button class="px-4 py-2 bg-indigo-600 text-white rounded-lg hover:bg-indigo-700 flex items-center gap-2 transition-colors">
+            <i data-lucide="plus" class="w-4 h-4"></i>
+            Add Customer
+        </button>
+    </div>
+    <div class="flex flex-col lg:flex-row gap-6 overflow-x-auto min-h-[calc(100vh-12rem)]">
+        <!-- Lead Column -->
+        <div class="flex-shrink-0 w-full lg:w-80">
+            <div class="bg-gray-50 rounded-lg p-4">
+                <div class="flex items-center justify-between mb-4">
+                    <h3 class="text-lg font-semibold text-gray-900">Leads</h3>
+                    <span class="px-3 py-1 bg-gray-200 text-gray-700 rounded-full text-sm">4</span>
+                </div>
+                <div class="space-y-4">
+                    <!-- Kanban Items -->
+                    <div class="bg-white p-4 rounded-lg shadow-sm hover:shadow-md transition-shadow cursor-move">
+                        <div class="flex items-center gap-3 mb-3">
+                            <img class="h-8 w-8 rounded-full" src="https://ui-avatars.com/api/?name=Alex+Smith&background=6366f1&color=fff" alt="">
+                            <span class="font-medium text-gray-900">Alex Smith</span>
+                        </div>
+                        <div class="text-sm text-gray-500 mb-3">Interested in premium package</div>
+                        <div class="flex items-center justify-between">
+                            <span class="px-2 py-1 bg-blue-100 text-blue-800 text-xs rounded-full">$5,000</span>
+                            <span class="text-xs text-gray-500">2 days ago</span>
+                        </div>
+                    </div>
+
+                    <!-- More Lead Items -->
+                    <div class="bg-white p-4 rounded-lg shadow-sm hover:shadow-md transition-shadow cursor-move">
+                        <div class="flex items-center gap-3 mb-3">
+                            <img class="h-8 w-8 rounded-full" src="https://ui-avatars.com/api/?name=Emma+Wilson&background=14b8a6&color=fff" alt="">
+                            <span class="font-medium text-gray-900">Emma Wilson</span>
+                        </div>
+                        <div class="text-sm text-gray-500 mb-3">New business inquiry</div>
+                        <div class="flex items-center justify-between">
+                            <span class="px-2 py-1 bg-blue-100 text-blue-800 text-xs rounded-full">$3,200</span>
+                            <span class="text-xs text-gray-500">1 day ago</span>
+                        </div>
+                    </div>
+                </div>
+            </div>
+        </div>
+
+        <!-- In Progress Column -->
+        <div class="flex-shrink-0 w-full lg:w-80">
+            <div class="bg-gray-50 rounded-lg p-4">
+                <div class="flex items-center justify-between mb-4">
+                    <h3 class="text-lg font-semibold text-gray-900">In Progress</h3>
+                    <span class="px-3 py-1 bg-gray-200 text-gray-700 rounded-full text-sm">3</span>
+                </div>
+                <!-- Update the space-y-4 div in each column -->
+                <div class="space-y-4 min-h-[200px] transition-colors duration-200">
+                    <!-- Update the card classes in each column -->
+                    <div class="bg-white p-4 rounded-lg shadow-sm hover:shadow-md transition-all duration-200 cursor-move active:shadow-lg active:scale-95">
+                        <div class="flex items-center gap-3 mb-3">
+                            <img class="h-8 w-8 rounded-full" src="https://ui-avatars.com/api/?name=Sarah+Johnson&background=f59e0b&color=fff" alt="">
+                            <span class="font-medium text-gray-900">Sarah Johnson</span>
+                        </div>
+                        <div class="text-sm text-gray-500 mb-3">Contract negotiation</div>
+                        <div class="flex items-center justify-between">
+                            <span class="px-2 py-1 bg-yellow-100 text-yellow-800 text-xs rounded-full">$8,500</span>
+                            <span class="text-xs text-gray-500">3 days ago</span>
+                        </div>
+                    </div>
+                </div>
+            </div>
+        </div>
+
+        <!-- After In Progress Column and before Closed Column -->
+        <div class="flex-shrink-0 w-full lg:w-80">
+            <div class="bg-gray-50 rounded-lg p-4">
+                <div class="flex items-center justify-between mb-4">
+                    <h3 class="text-lg font-semibold text-gray-900">Negotiation</h3>
+                    <span class="px-3 py-1 bg-gray-200 text-gray-700 rounded-full text-sm">2</span>
+                </div>
+                <div class="space-y-4 min-h-[200px] transition-colors duration-200">
+                    <div class="bg-white p-4 rounded-lg shadow-sm hover:shadow-md transition-all duration-200 cursor-move active:shadow-lg active:scale-95">
+                        <div class="flex items-center gap-3 mb-3">
+                            <img class="h-8 w-8 rounded-full" src="https://ui-avatars.com/api/?name=David+Chen&background=8b5cf6&color=fff" alt="">
+                            <span class="font-medium text-gray-900">David Chen</span>
+                        </div>
+                        <div class="text-sm text-gray-500 mb-3">Enterprise solution discussion</div>
+                        <div class="flex items-center justify-between">
+                            <span class="px-2 py-1 bg-purple-100 text-purple-800 text-xs rounded-full">$25,000</span>
+                            <span class="text-xs text-gray-500">1 day ago</span>
+                        </div>
+                    </div>
+                </div>
+            </div>
+        </div>
+        <!-- Closed Column -->
+        <div class="flex-shrink-0 w-full lg:w-80">
+            <div class="bg-gray-50 rounded-lg p-4">
+                <div class="flex items-center justify-between mb-4">
+                    <h3 class="text-lg font-semibold text-gray-900">Closed</h3>
+                    <span class="px-3 py-1 bg-gray-200 text-gray-700 rounded-full text-sm">2</span>
+                </div>
+                <div class="space-y-4 min-h-[200px] transition-colors duration-200">
+                    <div class="bg-white p-4 rounded-lg shadow-sm hover:shadow-md transition-all duration-200 cursor-move active:shadow-lg active:scale-95">
+                        <div class="flex items-center gap-3 mb-3">
+                            <img class="h-8 w-8 rounded-full" src="https://ui-avatars.com/api/?name=Mike+Brown&background=10b981&color=fff" alt="">
+                            <span class="font-medium text-gray-900">Mike Brown</span>
+                        </div>
+                        <div class="text-sm text-gray-500 mb-3">Deal closed successfully</div>
+                        <div class="flex items-center justify-between">
+                            <span class="px-2 py-1 bg-green-100 text-green-800 text-xs rounded-full">$12,000</span>
+                            <span class="text-xs text-gray-500">1 week ago</span>
+                        </div>
+                    </div>
+                    <div class="bg-white p-4 rounded-lg shadow-sm hover:shadow-md transition-all duration-200 cursor-move active:shadow-lg active:scale-95">
+                        <div class="flex items-center gap-3 mb-3">
+                            <img class="h-8 w-8 rounded-full" src="https://ui-avatars.com/api/?name=Robert+Lee&background=dc2626&color=fff" alt="">
+                            <span class="font-medium text-gray-900">Robert Lee</span>
+                        </div>
+                        <div class="text-sm text-gray-500 mb-3">Annual contract signed</div>
+                        <div class="flex items-center justify-between">
+                            <span class="px-2 py-1 bg-green-100 text-green-800 text-xs rounded-full">$18,500</span>
+                            <span class="text-xs text-gray-500">3 days ago</span>
+                        </div>
+                    </div>
+                </div>
+            </div>
+        </div>
+    </div>
+</div>
+
+{% endblock %}
+
+{% block script %}
+<script>
+    document.addEventListener('DOMContentLoaded', function() {
+        // Initialize Sortable for each column
+        const columns = document.querySelectorAll('.space-y-4');
+        columns.forEach(column => {
+            new Sortable(column, {
+                group: 'kanban', // This allows dragging between columns
+                animation: 150,
+                ghostClass: 'bg-gray-100',
+                dragClass: 'shadow-lg',
+                onEnd: function(evt) {
+                    const itemEl = evt.item;
+                    const newColumn = evt.to;
+                    const oldColumn = evt.from;
+                    
+                    // Update the counts
+                    updateColumnCount(oldColumn);
+                    updateColumnCount(newColumn);
+                    
+                    // Add move animation
+                    itemEl.classList.add('scale-100');
+                    setTimeout(() => {
+                        itemEl.classList.remove('scale-100');
+                    }, 300);
+                }
+            });
+        });
+
+        // Function to update column count
+        function updateColumnCount(column) {
+            const countBadge = column.closest('.bg-gray-50').querySelector('.rounded-full');
+            const itemCount = column.children.length;
+            countBadge.textContent = itemCount;
+        }
+    });
+</script>
+{% endblock %}

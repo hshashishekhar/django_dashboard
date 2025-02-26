@@ -7,4 +7,6 @@ urlpatterns = [
     path('profile', views.profile, name='profile'),
     path('settings', views.settings, name='settings'),
     path('invoice', views.invoice, name='invoice'),
+    path('crm', views.crm, name='crm'),
+    path('kanban', views.kanban, name='kanban'),
 ]
